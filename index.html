@@ -1,925 +1,517 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>MedLetter — AI Medical Letter Generator</title>
-  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <style>
-    *{box-sizing:border-box;margin:0;padding:0}
-    body{font-family:'Inter',system-ui,sans-serif;background:#f9fdfb}
-    @keyframes spin{to{transform:rotate(360deg)}}
-    @keyframes mp{0%,100%{opacity:1}50%{opacity:0.3}}
-    @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
-  </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MedLetter — AI Medical Letter Generator</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:#f9fdfb;color:#0f2d1c}
+:root{--gd:#1a6b3c;--gm:#1f8f52;--gb:#25b86e;--gl:#e8f7ef;--gbr:#c3e8d5;--brd:#ddf0e6;--tmu:#7aaa8a;--shd:rgba(26,107,60,0.10)}
+.page{display:none}.page.active{display:block}
+nav{background:#fff;border-bottom:1.5px solid var(--brd);padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 10px var(--shd)}
+.brand{display:flex;align-items:center;gap:10px;cursor:pointer;text-decoration:none}
+.logo-box{width:34px;height:34px;background:var(--gd);border-radius:8px;display:grid;place-items:center;flex-shrink:0}
+.brand-name{font-family:'Lora',serif;font-size:18px;font-weight:700;color:var(--gd)}
+.brand-name em{font-style:normal;font-weight:600;color:#555}
+.btn{padding:8px 18px;border-radius:8px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all .15s}
+.btn-o{background:#fff;color:var(--gd);border:1.5px solid var(--gbr)}.btn-o:hover{background:var(--gl)}
+.btn-g{background:var(--gd);color:#fff}.btn-g:hover{background:var(--gm)}
+.btn-lg{padding:13px 24px;font-size:15px;border-radius:10px}
+.btn-w{width:100%}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+/* Hero */
+.hero{background:linear-gradient(155deg,#0d4a28,#1a6b3c 55%,#1f8f52);padding:56px 20px 48px;text-align:center;color:#fff}
+.hero h1{font-family:'Lora',serif;font-size:36px;font-weight:700;margin-bottom:12px;line-height:1.2}
+.hero h1 span{color:#7dffc0}
+.hero p{font-size:16px;color:rgba(255,255,255,.75);max-width:500px;margin:0 auto 28px;line-height:1.6}
+.hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:32px}
+.hbtn{padding:14px 28px;border-radius:10px;font-family:'Inter',sans-serif;font-size:15px;font-weight:700;cursor:pointer;border:none}
+.hbtn-w{background:#fff;color:var(--gd)}.hbtn-w:hover{transform:translateY(-2px)}
+.hbtn-g{background:rgba(255,255,255,.12);color:#fff;border:1.5px solid rgba(255,255,255,.3)}.hbtn-g:hover{background:rgba(255,255,255,.2)}
+.stats{display:flex;gap:28px;justify-content:center;flex-wrap:wrap;border-top:1px solid rgba(255,255,255,.15);padding-top:24px}
+.snum{font-family:'Lora',serif;font-size:26px;font-weight:700}
+.slbl{font-size:11px;color:rgba(255,255,255,.6);margin-top:2px}
+/* Sections */
+.sec{max-width:900px;margin:0 auto;padding:52px 20px}
+.stag{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--gm);margin-bottom:10px;text-align:center}
+.sec h2{font-family:'Lora',serif;font-size:28px;font-weight:700;color:#0f2d1c;text-align:center;margin-bottom:32px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+@media(max-width:600px){.g3{grid-template-columns:repeat(2,1fr)}.g4{grid-template-columns:repeat(2,1fr)}}
+.card{background:#fff;border:1.5px solid var(--brd);border-radius:14px;padding:20px;transition:all .2s;cursor:pointer}
+.card:hover{transform:translateY(-3px);box-shadow:0 8px 24px var(--shd)}
+.card h3{font-size:14px;font-weight:600;color:#0f2d1c;margin-bottom:6px}
+.card p{font-size:12px;color:var(--tmu);line-height:1.5}
+.bg-gl{background:var(--gl);padding:52px 20px}.bg-w{background:#fff;padding:52px 20px}
+/* Pricing */
+.pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:900px;margin:0 auto}
+@media(max-width:600px){.pgrid{grid-template-columns:1fr}}
+.plan{background:#fff;border:2px solid var(--brd);border-radius:18px;padding:26px 20px;display:flex;flex-direction:column;position:relative}
+.plan.feat{border-color:var(--gd);box-shadow:0 0 0 4px rgba(26,107,60,.08)}
+.ftag{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:var(--gd);color:#fff;border-radius:20px;padding:4px 16px;font-size:11px;font-weight:700;white-space:nowrap}
+.pname{font-size:12px;font-weight:700;color:var(--tmu);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+.pprice{font-family:'Lora',serif;font-size:40px;font-weight:700;color:#0f2d1c;line-height:1;margin-bottom:4px}
+.pprice sup{font-size:18px;vertical-align:top;margin-top:6px;font-family:'Inter',sans-serif}
+.pprice small{font-size:13px;color:var(--tmu);font-family:'Inter',sans-serif;font-weight:400}
+.pdesc{font-size:13px;color:var(--tmu);margin-bottom:18px;line-height:1.5}
+.pfeats{list-style:none;flex:1;margin-bottom:20px}
+.pfeats li{font-size:12px;color:#2d5a3d;padding:4px 0;display:flex;gap:7px}
+.pfeats li::before{content:'✓';color:var(--gb);font-weight:700;flex-shrink:0}
+.pfeats li.no{color:var(--tmu)}.pfeats li.no::before{content:'–';color:var(--tmu)}
+.pbtn{padding:11px;border-radius:10px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer;width:100%;border:none}
+.pbtn-o{background:#fff;color:var(--gd);border:2px solid var(--gbr)}.pbtn-o:hover{background:var(--gl)}
+.pbtn-s{background:var(--gd);color:#fff}.pbtn-s:hover{background:var(--gm)}
+/* CTA + Footer */
+.cta{background:var(--gd);padding:60px 20px;text-align:center;color:#fff}
+.cta h2{font-family:'Lora',serif;font-size:30px;font-weight:700;margin-bottom:10px}
+.cta p{font-size:16px;color:rgba(255,255,255,.75);margin-bottom:24px}
+footer{background:#0f2d1c;padding:22px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.fbrand{font-family:'Lora',serif;font-size:15px;font-weight:700;color:#fff}
+.flinks{display:flex;gap:14px}.flinks a{font-size:12px;color:rgba(255,255,255,.5);cursor:pointer;text-decoration:none}
+.fcopy{font-size:11px;color:rgba(255,255,255,.3);width:100%}
+/* Country toggle */
+.ctog{display:flex;background:var(--gd);border-radius:24px;padding:3px;gap:2px}
+.ctog button{padding:6px 16px;border-radius:20px;border:none;cursor:pointer;font-size:13px;font-weight:600;transition:all .15s}
+.ctog button.on{background:#fff;color:var(--gd)}
+.ctog button:not(.on){background:transparent;color:rgba(255,255,255,.75)}
+/* Auth */
+.awrap{min-height:100vh;display:grid;grid-template-columns:1fr 1fr}
+@media(max-width:640px){.awrap{grid-template-columns:1fr}}
+.aleft{background:var(--gd);padding:48px;display:flex;flex-direction:column;justify-content:center;color:#fff}
+@media(max-width:640px){.aleft{display:none}}
+.aquote{font-family:'Lora',serif;font-size:21px;font-weight:600;line-height:1.45;margin-bottom:22px;color:rgba(255,255,255,.95)}
+.afeats{list-style:none}
+.afeats li{display:flex;align-items:center;gap:10px;font-size:14px;color:rgba(255,255,255,.8);padding:6px 0}
+.afeats li::before{content:'✓';width:20px;height:20px;background:rgba(255,255,255,.15);border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:700;flex-shrink:0}
+.aright{background:#fff;padding:48px;display:flex;flex-direction:column;justify-content:center;overflow-y:auto}
+@media(max-width:640px){.aright{padding:28px 18px}}
+.atitle{font-family:'Lora',serif;font-size:25px;font-weight:700;color:#0f2d1c;margin-bottom:4px}
+.asub{font-size:14px;color:var(--tmu);margin-bottom:22px}
+.back{font-size:13px;color:var(--tmu);cursor:pointer;margin-bottom:18px;display:inline-block}
+.tnotice{background:var(--gl);border:1.5px solid var(--gbr);border-radius:10px;padding:11px 14px;font-size:13px;color:#2d5a3d;margin-bottom:14px}
+.crow{background:var(--gl);border:1.5px solid var(--gbr);border-radius:10px;padding:11px 14px;display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px}
+.clbl{font-size:13px;font-weight:500;color:#2d5a3d}
+.ordiv{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--tmu);margin:8px 0}
+.ordiv::before,.ordiv::after{content:'';flex:1;height:1px;background:var(--brd)}
+.aswitch{text-align:center;font-size:13px;color:var(--tmu);margin-top:14px}
+.aswitch a{color:var(--gd);font-weight:600;cursor:pointer}
+/* Fields */
+.field{display:flex;flex-direction:column;gap:5px;margin-bottom:13px}
+.field label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.9px;color:var(--tmu)}
+.field input,.field select,.field textarea{background:#f9fdfb;border:1.5px solid var(--brd);border-radius:8px;padding:11px 12px;font-family:'Inter',sans-serif;font-size:14px;color:#0f2d1c;outline:none;width:100%;transition:border .15s}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--gb);background:#fff;box-shadow:0 0 0 3px rgba(37,184,110,.1)}
+.field textarea{resize:vertical;min-height:78px;line-height:1.6}
+.field select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%231a6b3c' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:30px}
+.fhint{font-size:11px;color:var(--tmu);margin-top:1px}
+.tc{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.fc{grid-column:1/-1}
+.ferr{background:#fff5f5;border:1.5px solid #fca5a5;border-radius:8px;padding:10px 12px;color:#c0392b;font-size:13px;margin-top:8px;display:none}
+.ferr.on{display:block}
+/* App */
+.main{max-width:780px;margin:0 auto;padding:24px 16px 72px}
+.tgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:24px}
+@media(max-width:480px){.tgrid{grid-template-columns:repeat(2,1fr)}}
+.tc-btn{background:#fff;border:2px solid var(--brd);border-radius:10px;padding:13px;cursor:pointer;text-align:left;font-family:'Inter',sans-serif;transition:all .18s}
+.tc-btn:hover{border-color:var(--gb);background:#f4fbf7}
+.tc-btn.on{border-color:var(--gd);background:var(--gl);box-shadow:0 0 0 3px rgba(26,107,60,.08)}
+.ticon{width:26px;height:26px;background:var(--gd);border-radius:6px;display:grid;place-items:center;margin-bottom:7px}
+.tname{font-size:12px;font-weight:600;color:#0f2d1c;margin-bottom:2px}
+.tdesc{font-size:10px;color:var(--tmu);line-height:1.4}
+.slabel{display:flex;align-items:center;gap:8px;margin-bottom:11px}
+.snum{width:22px;height:22px;border-radius:50%;background:var(--gd);color:#fff;font-size:11px;font-weight:700;display:grid;place-items:center;flex-shrink:0}
+.stitle{font-size:14px;font-weight:600;color:var(--gd)}
+.fcard{background:#fff;border:1.5px solid var(--brd);border-radius:14px;padding:22px;margin-bottom:14px;box-shadow:0 2px 8px var(--shd)}
+.genbtn{width:100%;padding:14px;background:var(--gd);border:none;border-radius:10px;color:#fff;font-family:'Inter',sans-serif;font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:all .2s}
+.genbtn:hover:not(:disabled){background:var(--gm);transform:translateY(-1px)}
+.genbtn:disabled{opacity:.55;cursor:not-allowed;transform:none}
+.spin{width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top:2px solid #fff;border-radius:50%;animation:sp .65s linear infinite;display:none}
+@keyframes sp{to{transform:rotate(360deg)}}
+.outwrap{margin-top:26px;display:none}
+.outwrap.on{display:block;animation:rise .35s ease}
+@keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.outhdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:11px;flex-wrap:wrap;gap:8px}
+.rtag{display:flex;align-items:center;gap:7px;font-size:13px;font-weight:600;color:var(--gd)}
+.rdot{width:8px;height:8px;border-radius:50%;background:var(--gb);box-shadow:0 0 8px var(--gb);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.abtns{display:flex;gap:7px;flex-wrap:wrap}
+.abtn{padding:7px 13px;border-radius:8px;font-family:'Inter',sans-serif;font-size:12px;font-weight:600;cursor:pointer;border:none;transition:all .15s}
+.abtn-c{background:var(--gl);color:var(--gd);border:1.5px solid var(--gbr)}.abtn-c:hover{background:var(--gbr)}
+.abtn-d{background:var(--gd);color:#fff}.abtn-d:hover{background:var(--gm)}
+.abtn-e{background:var(--gd);color:#fff}.abtn-e:hover{background:var(--gm)}
+.abtn-e:disabled{opacity:.45;cursor:not-allowed}
+.lbox{background:#fff;border:1.5px solid var(--gbr);border-radius:14px;overflow:hidden;box-shadow:0 4px 18px var(--shd)}
+.ltop{background:var(--gd);padding:10px 16px;display:flex;align-items:center;gap:7px}
+.wd{width:9px;height:9px;border-radius:50%}
+.w1{background:rgba(255,255,255,.2)}.w2{background:rgba(255,255,255,.35)}.w3{background:rgba(255,255,255,.55)}
+.lfile{margin-left:6px;font-size:11px;color:rgba(255,255,255,.65);font-weight:500}
+.lbody{padding:28px 32px;min-height:100px}
+.ltxt{font-family:'Inter',sans-serif;font-size:14px;line-height:1.9;color:var(--gd);white-space:pre-wrap}
+.disc{margin-top:12px;padding:11px 14px;background:#fffbeb;border:1.5px solid #fde68a;border-radius:10px;font-size:12px;color:#92400e;line-height:1.6}
+.rcheck{margin-top:11px;padding:11px 13px;background:var(--gl);border:1.5px solid var(--gbr);border-radius:10px;display:flex;gap:9px;align-items:flex-start;font-size:13px;color:#0f2d1c;cursor:pointer;transition:background .2s}
+.rcheck.on{background:#f0fdf4;border-color:var(--gb)}
+.rcheck input{width:15px;height:15px;accent-color:var(--gd);margin-top:2px;flex-shrink:0;cursor:pointer}
+/* Panels */
+.panel{background:#fff;border:1.5px solid var(--brd);border-radius:14px;padding:18px;margin-bottom:14px;box-shadow:0 2px 8px var(--shd);display:none}
+.panel.on{display:block}
+.ptitle{font-family:'Lora',serif;font-size:15px;font-weight:700;color:#0f2d1c;margin-bottom:14px}
+.hitem{display:flex;align-items:center;justify-content:space-between;padding:9px 11px;background:#f9fdfb;border-radius:8px;margin-bottom:7px;border:1px solid var(--brd);flex-wrap:wrap;gap:6px}
+.hititle{font-size:13px;font-weight:600;color:#0f2d1c}
+.hisub{font-size:11px;color:var(--tmu)}
+.hempty{font-size:13px;color:var(--tmu);text-align:center;padding:10px}
+/* Modals */
+.moverlay{position:fixed;inset:0;background:rgba(15,45,28,.55);z-index:500;display:none;align-items:center;justify-content:center;padding:14px;backdrop-filter:blur(4px)}
+.moverlay.on{display:flex}
+.modal{background:#fff;border-radius:18px;max-width:440px;width:100%;box-shadow:0 24px 80px rgba(0,0,0,.25);overflow:hidden;max-height:90vh;overflow-y:auto}
+.mhead{background:var(--gd);padding:20px 22px 16px;color:#fff;position:relative}
+.mhead h2{font-family:'Lora',serif;font-size:19px;font-weight:700;margin-bottom:3px}
+.mhead p{font-size:13px;color:rgba(255,255,255,.75)}
+.mcls{position:absolute;top:11px;right:14px;background:transparent;border:none;color:rgba(255,255,255,.7);font-size:22px;cursor:pointer;line-height:1}
+.mbody{padding:18px 20px 22px}
+.minfo{background:var(--gl);border:1px solid var(--gbr);border-radius:8px;padding:10px 12px;font-size:13px;color:#2d5a3d;margin-bottom:14px}
+.pmcards{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:14px}
+@media(max-width:420px){.pmcards{grid-template-columns:1fr}}
+.pmcard{border:2px solid var(--brd);border-radius:11px;padding:13px;cursor:pointer;text-align:center;transition:all .18s}
+.pmcard:hover{border-color:var(--gb);background:#f4fbf7}
+.pmcard.on{border-color:var(--gd);background:var(--gl)}
+.pmname{font-size:11px;font-weight:700;color:var(--tmu);text-transform:uppercase;margin-bottom:3px}
+.pmprice{font-family:'Lora',serif;font-size:24px;font-weight:700;color:#0f2d1c}
+.pmperiod{font-size:10px;color:var(--tmu);margin-top:1px}
+.pill{background:#fffbeb;border:1px solid #fde68a;border-radius:20px;padding:3px 10px;font-size:11px;color:#d97706;font-weight:600}
+</style>
 </head>
 <body>
-  <div id="root"></div>
-  <script type="text/babel" data-presets="react">
-const { useState, useCallback, useRef } = React;
 
-const G = {
-  gd:"#1a6b3c",gm:"#1f8f52",gb:"#25b86e",
-  gl:"#e8f7ef",gp:"#f4fbf7",gbr:"#c3e8d5",
-  td:"#0f2d1c",tm:"#2d5a3d",tmu:"#7aaa8a",
-  wh:"#ffffff",ow:"#f9fdfb",brd:"#ddf0e6",
-  shd:"rgba(26,107,60,0.10)",red:"#c0392b",
-  amber:"#d97706",
-};
-
-// SVG icon library — no emojis
-const Icon = {
-  cross: <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><rect x="8" y="2" width="4" height="16" rx="2" fill="currentColor"/><rect x="2" y="8" width="16" height="4" rx="2" fill="currentColor"/></svg>,
-  doc:   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10,9 9,9 8,9"/></svg>,
-  mic:   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0014 0"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>,
-  stop:  <svg width="10" height="10" viewBox="0 0 10 10"><rect x="1" y="1" width="8" height="8" rx="1" fill="white"/></svg>,
-  mail:  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>,
-  dl:    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>,
-  print: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="6,9 6,2 18,2 18,9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>,
-  copy:  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>,
-  hist:  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="12,8 12,12 14,14"/><path d="M3.05 11a9 9 0 1 0 .5-4.17"/><polyline points="3,3 3,11 11,11"/></svg>,
-  check: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="20,6 9,17 4,12"/></svg>,
-  close: <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>,
-  info:  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>,
-  user:  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>,
-  speed: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>,
-  globe: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>,
-  lock:  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>,
-  warn:  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>,
-  star:  <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>,
-  letter:<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 7 10-7"/></svg>,
-  notes: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="12" y2="17"/></svg>,
-};
-
-const COUNTRY = {
-  UK:{
-    flag:"GB", label:"United Kingdom",
-    licenceLabel:"GMC Number", licencePlaceholder:"e.g. 7654321",
-    licenceHint:"General Medical Council registration number",
-    currency:"£", prices:{Starter:19,Pro:39,Practice:89},
-    dateLocale:"en-GB",
-    compliance:"GDPR Compliant · ICO Registered",
-    letterTypes:[
-      {id:"sick_note",  label:"SN", name:"Sick Note",           desc:"Absence certificate for employer or school"},
-      {id:"referral",   label:"SR", name:"Specialist Referral",  desc:"Refer patient with full clinical context"},
-      {id:"fitness",    label:"FW", name:"Fitness to Work",      desc:"Return-to-work or fitness certificate"},
-      {id:"insurance",  label:"IL", name:"Insurance Letter",     desc:"Medical report for insurance claim"},
-      {id:"medication", label:"ML", name:"Medication Letter",    desc:"Patient-friendly medication explanation"},
-      {id:"custom",     label:"CL", name:"Custom Letter",        desc:"Council, legal, housing and more"},
-    ],
-    typeNames:{sick_note:"Sick Note / Absence Certificate",referral:"Specialist Referral Letter",fitness:"Fitness to Work Certificate",insurance:"Insurance Medical Letter",medication:"Medication Explanation Letter",custom:"Custom Medical Letter"},
-    quickPhrases:[
-      "Patient is unfit for work due to their medical condition.",
-      "Expected recovery period: 2–4 weeks.",
-      "Patient requires physiotherapy/occupational therapy.",
-      "Patient is fit to return to work with reasonable adjustments.",
-      "Symptoms include significant pain, fatigue and limited mobility.",
-      "This letter is provided at the patient's request.",
-    ],
-    testimonials:[
-      {q:'"40 minutes of letter writing reduced to five. The quality is genuinely impressive."',name:"Dr. Sarah J.",role:"GP, Manchester"},
-      {q:'"Referral letters are perfectly structured. Consultants have commented on the quality."',name:"Dr. Rajiv M.",role:"GP Partner, Birmingham"},
-      {q:'"Practice details auto-fill every time. An essential part of my daily workflow now."',name:"Dr. Fiona O.",role:"Locum GP, London"},
-    ],
-  },
-  US:{
-    flag:"US", label:"United States",
-    licenceLabel:"NPI Number", licencePlaceholder:"10-digit NPI e.g. 1234567890",
-    licenceHint:"National Provider Identifier from NPPES",
-    currency:"$", prices:{Starter:24,Pro:49,Practice:109},
-    dateLocale:"en-US",
-    compliance:"HIPAA-Conscious · No PHI Stored",
-    letterTypes:[
-      {id:"sick_note",  label:"ML", name:"Medical Leave Note",   desc:"Absence documentation for employer or school"},
-      {id:"referral",   label:"SR", name:"Specialist Referral",  desc:"Refer patient with full clinical context"},
-      {id:"prior_auth", label:"PA", name:"Prior Authorization",  desc:"Insurance pre-authorization request"},
-      {id:"fmla",       label:"FM", name:"FMLA Certification",   desc:"Family & Medical Leave Act documentation"},
-      {id:"medication", label:"MX", name:"Medication Letter",    desc:"Patient-friendly medication explanation"},
-      {id:"custom",     label:"CL", name:"Custom Letter",        desc:"Disability, legal, school and more"},
-    ],
-    typeNames:{sick_note:"Medical Leave Note",referral:"Specialist Referral Letter",prior_auth:"Prior Authorization Request",fmla:"FMLA Certification Letter",medication:"Medication Explanation Letter",custom:"Custom Medical Letter"},
-    quickPhrases:[
-      "Patient is medically unable to perform work duties.",
-      "Expected recovery period: 2–4 weeks.",
-      "Patient requires physical therapy and occupational rehabilitation.",
-      "Patient may return to work with light-duty restrictions.",
-      "Patient's condition is consistent with a serious health condition under FMLA.",
-      "This letter is provided at the patient's request for employer documentation.",
-    ],
-    testimonials:[
-      {q:'"The prior auth letters alone are worth the subscription. Saves 30 minutes a day."',name:"Dr. Michael T.",role:"Family Physician, Texas"},
-      {q:'"FMLA letters come out perfectly formatted. My MA used to spend an hour on these."',name:"Dr. Priya S.",role:"Internal Medicine, California"},
-      {q:'"Clean, professional, medically accurate. I barely edit anything before signing."',name:"Dr. James W.",role:"NP, New York"},
-    ],
-  },
-};
-
-const US_STATES = ["AL","AK","AZ","AR","CA","CO","CT","DE","FL","GA","HI","ID","IL","IN","IA","KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ","NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VT","VA","WA","WV","WI","WY","DC"];
-
-// Base styles
-const inp = {background:G.ow,border:`1.5px solid ${G.brd}`,borderRadius:8,padding:"11px 14px",fontFamily:"system-ui,sans-serif",fontSize:14,color:G.td,outline:"none",width:"100%",boxSizing:"border-box"};
-const lbl = {fontSize:11,fontWeight:600,textTransform:"uppercase",letterSpacing:"0.9px",color:G.tmu};
-const btnG = (sz="md") => ({padding:sz==="lg"?"14px 28px":sz==="sm"?"7px 14px":"10px 18px",borderRadius:8,border:"none",background:G.gd,color:"#fff",fontFamily:"system-ui",fontSize:sz==="sm"?12:13,fontWeight:600,cursor:"pointer",display:"inline-flex",alignItems:"center",gap:6});
-const btnO = (sz="md") => ({padding:sz==="lg"?"14px 28px":sz==="sm"?"7px 14px":"10px 18px",borderRadius:8,border:`1.5px solid ${G.gbr}`,background:G.wh,color:G.gd,fontFamily:"system-ui",fontSize:sz==="sm"?12:13,fontWeight:600,cursor:"pointer",display:"inline-flex",alignItems:"center",gap:6});
-
-// Country flag badge
-function FlagBadge({ code }) {
-  return (
-    <span style={{display:"inline-flex",alignItems:"center",justifyContent:"center",width:20,height:14,background:code==="GB"?"#012169":"#B22234",borderRadius:2,fontSize:9,fontWeight:700,color:"white",letterSpacing:0.5,flexShrink:0}}>
-      {code}
-    </span>
-  );
-}
-
-// Country toggle
-function CToggle({ country, setCountry }) {
-  return (
-    <div style={{display:"flex",background:G.gd,borderRadius:24,padding:3,gap:2}}>
-      {["UK","US"].map(c=>(
-        <button key={c} onClick={()=>setCountry(c)} style={{padding:"5px 14px",borderRadius:20,border:"none",cursor:"pointer",fontSize:12,fontWeight:600,background:country===c?"white":"transparent",color:country===c?G.gd:"rgba(255,255,255,0.75)",transition:"all 0.15s",display:"flex",alignItems:"center",gap:5}}>
-          <FlagBadge code={COUNTRY[c].flag}/> {c}
-        </button>
-      ))}
+<!-- LANDING -->
+<div id="pg-land" class="page active">
+  <nav>
+    <a class="brand" onclick="go('pg-land')">
+      <div class="logo-box"><svg width="16" height="16" viewBox="0 0 20 20" fill="none"><rect x="8" y="2" width="4" height="16" rx="2" fill="white"/><rect x="2" y="8" width="16" height="4" rx="2" fill="white"/></svg></div>
+      <span class="brand-name">Med<em>Letter</em></span>
+    </a>
+    <div style="display:flex;gap:8px;align-items:center">
+      <button class="btn btn-o" onclick="go('pg-login')">Log in</button>
+      <button class="btn btn-g" onclick="go('pg-signup')">Free trial</button>
     </div>
-  );
-}
+  </nav>
 
-// Logo
-function LogoMark({ size=32 }) {
-  return (
-    <div style={{width:size,height:size,background:G.gd,borderRadius:Math.round(size*0.22),display:"grid",placeItems:"center",flexShrink:0,color:"white"}}>
-      {Icon.cross}
+  <div class="hero">
+    <div style="display:flex;justify-content:center;margin-bottom:18px">
+      <div class="ctog"><button id="luk" class="on" onclick="lndCtry('UK',this)">UK</button><button id="lus" onclick="lndCtry('US',this)">US</button></div>
     </div>
-  );
-}
-
-function LogoFull({ onClick }) {
-  return (
-    <div style={{display:"flex",alignItems:"center",gap:10,cursor:"pointer"}} onClick={onClick}>
-      <LogoMark/>
-      <span style={{fontFamily:"Georgia,serif",fontSize:18,fontWeight:700,color:G.gd}}>Med<span style={{fontWeight:400,color:G.tm}}>Letter</span></span>
+    <h1>Stop writing letters.<br><span>Start treating patients.</span></h1>
+    <p id="hero-p">AI-generated sick notes, referrals, insurance letters and more — professionally formatted in seconds.</p>
+    <div class="hero-btns">
+      <button class="hbtn hbtn-w" onclick="go('pg-signup')">Start 15-day free trial</button>
+      <button class="hbtn hbtn-g" onclick="demoApp()">See it in action</button>
     </div>
-  );
-}
+    <div class="stats">
+      <div><div class="snum">45 min</div><div class="slbl">Saved daily</div></div>
+      <div><div class="snum">&lt;10s</div><div class="slbl">Per letter</div></div>
+      <div><div class="snum">6</div><div class="slbl">Letter types</div></div>
+      <div><div class="snum">15 days</div><div class="slbl">Free trial</div></div>
+    </div>
+  </div>
 
-// Voice hook
-function useVoice() {
-  const [listenId, setListenId] = useState(null);
-  const recRef = useRef(null);
-  const supported = typeof window !== "undefined" && ("SpeechRecognition" in window || "webkitSpeechRecognition" in window);
-  const start = (id, onResult) => {
-    if (!supported) return;
-    if (recRef.current) recRef.current.stop();
-    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-    const rec = new SR();
-    rec.continuous = false; rec.interimResults = false; rec.lang = "en-GB";
-    rec.onresult = e => onResult(e.results[0][0].transcript);
-    rec.onend = () => setListenId(null);
-    rec.onerror = () => setListenId(null);
-    rec.start(); recRef.current = rec; setListenId(id);
-  };
-  const stop = () => { if (recRef.current) recRef.current.stop(); setListenId(null); };
-  return { listenId, start, stop, supported };
-}
+  <div style="background:var(--gd);padding:11px 20px;text-align:center;font-size:13px;color:rgba(255,255,255,.8)">
+    UK & US Doctors · GDPR Compliant · HIPAA-Conscious · No patient data stored
+  </div>
 
-// Field component with optional voice
-function Field({ id, label, value, onChange, placeholder, type="text", voice, multiline, hint, rows=3 }) {
-  const active = voice?.listenId === id;
-  const appendVoice = t => onChange({ target:{ value: value ? value + " " + t : t } });
-  const micBtn = voice?.supported ? (
-    <button type="button" onClick={() => active ? voice.stop() : voice.start(id, appendVoice)}
-      style={{position:"absolute",right:8,[multiline?"top":"top"]:"50%",marginTop:multiline?8:0,transform:multiline?"none":"translateY(-50%)",width:28,height:28,borderRadius:"50%",border:"none",cursor:"pointer",background:active?"#e53e3e":G.gl,display:"flex",alignItems:"center",justifyContent:"center",color:active?"white":G.gd,boxShadow:active?"0 0 0 3px rgba(229,62,62,0.2)":"none",zIndex:2}}>
-      {active ? Icon.stop : Icon.mic}
+  <div class="bg-w">
+    <div class="sec" style="padding-top:0;padding-bottom:0">
+      <div class="stag">How it works</div>
+      <h2>A letter in four simple steps</h2>
+      <div class="g4">
+        <div class="card" style="text-align:center"><div style="width:36px;height:36px;background:var(--gd);border-radius:8px;display:grid;place-items:center;margin:0 auto 10px"><svg width="15" height="15" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/></svg></div><h3>Pick type</h3><p>Choose from 6 professional templates</p></div>
+        <div class="card" style="text-align:center"><div style="width:36px;height:36px;background:var(--gd);border-radius:8px;display:grid;place-items:center;margin:0 auto 10px"><svg width="15" height="15" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div><h3>Enter details</h3><p>Type or dictate clinical notes</p></div>
+        <div class="card" style="text-align:center"><div style="width:36px;height:36px;background:var(--gd);border-radius:8px;display:grid;place-items:center;margin:0 auto 10px"><svg width="15" height="15" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div><h3>AI writes it</h3><p>Professional letter in under 10 seconds</p></div>
+        <div class="card" style="text-align:center"><div style="width:36px;height:36px;background:var(--gd);border-radius:8px;display:grid;place-items:center;margin:0 auto 10px"><svg width="15" height="15" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div><h3>Review & send</h3><p>Copy, download or email instantly</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-gl">
+    <div class="sec" style="padding-top:0;padding-bottom:0">
+      <div class="stag">Letter types</div>
+      <h2 id="types-h">6 letter types for UK doctors</h2>
+      <div class="g3" id="types-g">
+        <div class="card" onclick="demoApp()"><h3>Sick Note</h3><p>Absence certificate for employer or school</p></div>
+        <div class="card" onclick="demoApp()"><h3>Specialist Referral</h3><p>Refer patient with full clinical context</p></div>
+        <div class="card" onclick="demoApp()"><h3>Fitness to Work</h3><p>Return-to-work or fitness certificate</p></div>
+        <div class="card" onclick="demoApp()"><h3>Insurance Letter</h3><p>Medical report for insurance claim</p></div>
+        <div class="card" onclick="demoApp()"><h3>Medication Letter</h3><p>Patient-friendly medication explanation</p></div>
+        <div class="card" onclick="demoApp()"><h3>Custom Letter</h3><p>Council, legal, housing and more</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-w">
+    <div class="sec" style="padding-top:0;padding-bottom:0">
+      <div class="stag">Testimonials</div>
+      <h2>Doctors love MedLetter</h2>
+      <div class="g3">
+        <div class="card"><div style="color:var(--gb);font-size:13px;margin-bottom:8px">★★★★★</div><p style="font-style:italic;color:#2d5a3d;line-height:1.65;margin-bottom:12px">"40 minutes of letter writing reduced to five. The quality is genuinely impressive."</p><strong style="font-size:12px;color:#0f2d1c">Dr. Sarah J.</strong><div style="font-size:11px;color:var(--tmu)">GP, Manchester</div></div>
+        <div class="card"><div style="color:var(--gb);font-size:13px;margin-bottom:8px">★★★★★</div><p style="font-style:italic;color:#2d5a3d;line-height:1.65;margin-bottom:12px">"Referral letters come out perfectly structured. Consultants have commented on the quality."</p><strong style="font-size:12px;color:#0f2d1c">Dr. Rajiv M.</strong><div style="font-size:11px;color:var(--tmu)">GP Partner, Birmingham</div></div>
+        <div class="card"><div style="color:var(--gb);font-size:13px;margin-bottom:8px">★★★★★</div><p style="font-style:italic;color:#2d5a3d;line-height:1.65;margin-bottom:12px">"Practice details auto-fill every time. An essential part of my daily workflow now."</p><strong style="font-size:12px;color:#0f2d1c">Dr. Fiona O.</strong><div style="font-size:11px;color:var(--tmu)">Locum GP, London</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-gl" id="pricing">
+    <div style="max-width:900px;margin:0 auto;padding:0 20px">
+      <div class="stag">Pricing</div>
+      <h2 style="font-family:'Lora',serif;font-size:28px;font-weight:700;color:#0f2d1c;text-align:center;margin-bottom:10px">Simple, honest pricing</h2>
+      <p style="text-align:center;color:var(--tmu);font-size:14px;margin-bottom:18px">15-day free trial · No credit card · Cancel anytime</p>
+      <div style="display:flex;justify-content:center;margin-bottom:20px">
+        <div class="ctog"><button id="puk" class="on" onclick="setPC('UK')">£ UK</button><button id="pus" onclick="setPC('US')">$ US</button></div>
+      </div>
+      <div style="background:#fff;border:1.5px solid var(--gbr);border-radius:14px;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:20px">
+        <div><div style="font-family:'Lora',serif;font-size:16px;font-weight:700;color:#0f2d1c;margin-bottom:2px">15-day free trial — everything included</div><div style="font-size:13px;color:var(--tmu)">Full access to all features. No credit card required.</div></div>
+        <button class="btn btn-g" onclick="go('pg-signup')">Start free trial</button>
+      </div>
+      <div class="pgrid">
+        <div class="plan"><div class="pname">Starter</div><div class="pprice"><sup id="s-c">£</sup><span id="s-p">19</span><small>/mo</small></div><div class="pdesc">For solo GPs and locums.</div><ul class="pfeats"><li>50 letters/month</li><li>All letter types</li><li>Copy & download</li><li>Practice pre-fill</li><li class="no">Letter history</li><li class="no">Multiple profiles</li></ul><button class="pbtn pbtn-o" onclick="go('pg-signup')">Start free trial</button></div>
+        <div class="plan feat"><div class="ftag">Most Popular</div><div class="pname">Pro</div><div class="pprice"><sup id="p-c">£</sup><span id="p-p">39</span><small>/mo</small></div><div class="pdesc">For busy GPs generating letters daily.</div><ul class="pfeats"><li>Unlimited letters</li><li>All letter types</li><li>Copy & download</li><li>Practice pre-fill</li><li>Letter history</li><li>Up to 3 profiles</li></ul><button class="pbtn pbtn-s" onclick="go('pg-signup')">Start free trial</button></div>
+        <div class="plan"><div class="pname">Practice</div><div class="pprice"><sup id="pr-c">£</sup><span id="pr-p">89</span><small>/mo</small></div><div class="pdesc">For group practices and teams.</div><ul class="pfeats"><li>Unlimited letters</li><li>All letter types</li><li>Copy & download</li><li>Practice pre-fill</li><li>Full history</li><li>Unlimited profiles</li></ul><button class="pbtn pbtn-o" onclick="go('pg-signup')">Start free trial</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cta"><h2>Ready to save an hour a day?</h2><p>Free for 15 days. No card needed.</p><button class="hbtn hbtn-w" onclick="go('pg-signup')">Start your free trial</button></div>
+
+  <footer>
+    <span class="fbrand">MedLetter</span>
+    <div class="flinks"><a onclick="go('pg-login')">Log in</a><a onclick="go('pg-signup')">Sign up</a><a>Privacy</a><a>Terms</a></div>
+    <div class="fcopy">© 2026 MedLetter · medletter.app · GDPR Compliant · HIPAA-Conscious</div>
+  </footer>
+</div>
+
+<!-- LOGIN -->
+<div id="pg-login" class="page">
+  <div class="awrap">
+    <div class="aleft">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:36px"><div class="logo-box"><svg width="16" height="16" viewBox="0 0 20 20" fill="none"><rect x="8" y="2" width="4" height="16" rx="2" fill="white"/><rect x="2" y="8" width="16" height="4" rx="2" fill="white"/></svg></div><span style="font-family:'Lora',serif;font-size:19px;font-weight:700;color:#fff">MedLetter</span></div>
+      <div class="aquote">"Finally — a tool that handles the admin so I can focus on patients."</div>
+      <ul class="afeats"><li>All letter types covered</li><li>AI drafts in under 10 seconds</li><li>Practice details pre-fill automatically</li><li>15-day free trial — no card required</li></ul>
+    </div>
+    <div class="aright">
+      <span class="back" onclick="go('pg-land')">← Back to home</span>
+      <div class="atitle">Welcome back</div>
+      <div class="asub">Log in to your MedLetter account</div>
+      <div class="crow"><span class="clbl">Your country</span><div class="ctog"><button id="li-uk" class="on" onclick="setAC('UK','li')">UK</button><button id="li-us" onclick="setAC('US','li')">US</button></div></div>
+      <div class="field"><label>Email address</label><input type="email" id="li-em" placeholder="dr.smith@example.com"></div>
+      <div class="field"><label>Password</label><input type="password" id="li-pw" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
+      <button class="btn btn-g btn-lg btn-w" onclick="doLogin()" style="margin-top:4px">Log in</button>
+      <div class="ordiv">or</div>
+      <button class="btn btn-o btn-lg btn-w" onclick="go('pg-signup')">Create a free account</button>
+      <div class="aswitch">No account? <a onclick="go('pg-signup')">Sign up — 15-day free trial</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- SIGNUP -->
+<div id="pg-signup" class="page">
+  <div class="awrap">
+    <div class="aleft">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:36px"><div class="logo-box"><svg width="16" height="16" viewBox="0 0 20 20" fill="none"><rect x="8" y="2" width="4" height="16" rx="2" fill="white"/><rect x="2" y="8" width="16" height="4" rx="2" fill="white"/></svg></div><span style="font-family:'Lora',serif;font-size:19px;font-weight:700;color:#fff">MedLetter</span></div>
+      <div class="aquote">"I save 45 minutes every day. It has become essential to my practice."</div>
+      <ul class="afeats"><li>Free for 15 days — no credit card needed</li><li>Your details pre-filled on every letter</li><li>Cancel any time, no questions asked</li><li>GDPR compliant — patient data stays private</li></ul>
+    </div>
+    <div class="aright">
+      <span class="back" onclick="go('pg-land')">← Back to home</span>
+      <div class="atitle">Start your free trial</div>
+      <div class="asub">15 days free — no credit card required</div>
+      <div class="crow"><div><div class="clbl">I am a doctor in</div><div style="font-size:11px;color:var(--tmu)">Sets your licence type and currency</div></div><div class="ctog"><button id="su-uk" class="on" onclick="setAC('UK','su')">UK</button><button id="su-us" onclick="setAC('US','su')">US</button></div></div>
+      <div class="tnotice">Full access for 15 days. Choose a plan when your trial ends.</div>
+      <div class="tc"><div class="field"><label>First Name</label><input id="su-fn" placeholder="Sarah"></div><div class="field"><label>Last Name</label><input id="su-ln" placeholder="Johnson"></div></div>
+      <div class="field"><label>Email</label><input type="email" id="su-em" placeholder="dr.johnson@example.com"></div>
+      <div class="field"><label id="su-ll">GMC Number</label><input id="su-li" placeholder="e.g. 7654321"><div class="fhint" id="su-lh">General Medical Council registration number</div></div>
+      <div class="field" id="su-stf" style="display:none"><label>Licence State</label><select id="su-st"><option value="">Select state...</option></select></div>
+      <div class="field"><label>Practice / Hospital</label><input id="su-pr" placeholder="e.g. City Medical Centre"></div>
+      <div class="field"><label>Password</label><input type="password" id="su-pw" placeholder="At least 8 characters"></div>
+      <div id="su-err" class="ferr"></div>
+      <button class="btn btn-g btn-lg btn-w" onclick="doSignup()" style="margin-top:4px">Start 15-day free trial</button>
+      <p style="font-size:11px;color:var(--tmu);text-align:center;margin-top:9px;line-height:1.5">By signing up you agree to our Terms of Service and Privacy Policy.</p>
+      <div class="aswitch">Already have an account? <a onclick="go('pg-login')">Log in</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="pg-app" class="page">
+  <nav>
+    <a class="brand" onclick="go('pg-land')">
+      <div class="logo-box"><svg width="16" height="16" viewBox="0 0 20 20" fill="none"><rect x="8" y="2" width="4" height="16" rx="2" fill="white"/><rect x="2" y="8" width="16" height="4" rx="2" fill="white"/></svg></div>
+      <span class="brand-name">Med<em>Letter</em></span>
+    </a>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+      <span class="pill" id="trial-pill">15 days left</span>
+      <span id="nav-name" style="font-size:13px;color:#2d5a3d;font-weight:500"></span>
+      <button class="btn btn-o" style="padding:6px 13px;font-size:12px" onclick="go('pg-land')">Log out</button>
+    </div>
+  </nav>
+
+  <div class="hero" style="padding:28px 20px 24px">
+    <div id="app-badge" style="margin-bottom:10px"><span style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);border-radius:20px;padding:4px 13px;font-size:12px;font-weight:600">UK Mode</span></div>
+    <h1 style="font-size:26px;margin-bottom:8px">Write letters in <span>seconds</span></h1>
+    <p style="font-size:14px">Fill in the basics and your professional letter is ready to send.</p>
+  </div>
+
+  <div class="main">
+    <div style="display:flex;gap:9px;margin-bottom:18px;flex-wrap:wrap">
+      <button class="btn btn-o" style="font-size:12px;padding:6px 13px" onclick="tog('panel-settings')">My Details</button>
+      <button class="btn btn-o" style="font-size:12px;padding:6px 13px" onclick="tog('panel-hist')">Letter History <span id="hcnt"></span></button>
+    </div>
+
+    <div class="panel" id="panel-settings">
+      <div class="ptitle">My Practice Details</div>
+      <div class="tc">
+        <div class="field"><label>Doctor Name</label><input id="ap-doc" placeholder="Dr. Sarah Johnson"></div>
+        <div class="field"><label>Practice</label><input id="ap-prac" placeholder="City Medical Centre"></div>
+      </div>
+      <p style="font-size:11px;color:var(--tmu)">These pre-fill on every letter.</p>
+    </div>
+
+    <div class="panel" id="panel-hist">
+      <div class="ptitle">Recent Letters</div>
+      <div id="hist-list"><div class="hempty">No letters yet.</div></div>
+    </div>
+
+    <div class="slabel"><div class="snum">1</div><div class="stitle">Select letter type</div></div>
+    <div class="tgrid" id="type-grid"></div>
+
+    <div class="slabel"><div class="snum">2</div><div class="stitle">Patient & clinical details</div></div>
+    <div class="fcard">
+      <div class="tc">
+        <div class="field"><label>Patient Full Name</label><input id="f-pat" placeholder="e.g. John Smith"></div>
+        <div class="field"><label id="f-dob-l">Date of Birth</label><input id="f-dob" placeholder="e.g. 15/03/1980"></div>
+        <div class="field"><label>Your Name</label><input id="f-doc" placeholder="Dr. Sarah Johnson"></div>
+        <div class="field"><label>Practice / Hospital</label><input id="f-prac" placeholder="City Medical Centre"></div>
+        <div class="field"><label>Addressed To</label><input id="f-rec" placeholder="To Whom It May Concern"></div>
+        <div class="field"><label>Letter Date</label><input id="f-date"></div>
+        <div class="field fc"><label>Clinical Notes</label><textarea id="f-notes" placeholder="e.g. Patient has acute lower back pain since 3 April. Unable to perform manual duties. Expected recovery 2–3 weeks."></textarea></div>
+        <div class="field fc" id="f-cust-wrap" style="display:none"><label>Describe What You Need</label><textarea id="f-cust" placeholder="e.g. A letter explaining why my patient requires workplace adjustments..."></textarea></div>
+      </div>
+    </div>
+
+    <div class="slabel"><div class="snum">3</div><div class="stitle">Tone & language</div></div>
+    <div class="tc" style="margin-bottom:18px">
+      <div class="field"><label>Tone</label><select id="f-tone"><option value="formal">Formal & Professional</option><option value="concise">Concise & Direct</option><option value="detailed">Detailed & Comprehensive</option><option value="empathetic">Empathetic & Supportive</option></select></div>
+      <div class="field"><label>Language</label><select id="f-lang"><option value="medical">Medical Professional</option><option value="plain">Plain English</option></select></div>
+    </div>
+
+    <button class="genbtn" id="gbtn" onclick="gen()">
+      <div class="spin" id="spin"></div>
+      <span id="glbl">Generate Letter</span>
     </button>
-  ) : null;
-  return (
-    <div style={{display:"flex",flexDirection:"column",gap:5}}>
-      <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
-        <label style={lbl}>{label}</label>
-        {active && <span style={{fontSize:10,color:"#e53e3e",fontWeight:600}}>Listening...</span>}
+    <div class="ferr" id="gen-err"></div>
+
+    <div class="outwrap" id="outwrap">
+      <div class="outhdr">
+        <div class="rtag"><div class="rdot"></div>Ready — review before sending</div>
+        <div class="abtns">
+          <button class="abtn abtn-c" id="copybtn" onclick="cpyLetter()">Copy</button>
+          <button class="abtn abtn-d" onclick="dlLetter()">Download</button>
+          <button class="abtn abtn-e" id="emb" onclick="openEmailMod()" disabled>Send Email</button>
+        </div>
       </div>
-      <div style={{position:"relative"}}>
-        {multiline
-          ? <textarea style={{...inp,minHeight:rows*36,lineHeight:1.6,resize:"vertical",paddingRight:voice?.supported?44:14}} placeholder={placeholder} value={value} onChange={onChange}/>
-          : <input type={type} style={{...inp,paddingRight:voice?.supported?44:14}} placeholder={placeholder} value={value} onChange={onChange}/>
-        }
-        {micBtn}
+      <div class="lbox">
+        <div class="ltop"><div class="wd w1"></div><div class="wd w2"></div><div class="wd w3"></div><span class="lfile" id="lfname">Medical Letter</span></div>
+        <div class="lbody"><div class="ltxt" id="ltxt"></div></div>
       </div>
-      {hint && <span style={{fontSize:11,color:G.tmu}}>{hint}</span>}
+      <div class="rcheck" id="rchk" onclick="toggleRev()">
+        <input type="checkbox" id="rcb">
+        <div><strong>I have reviewed this letter</strong> and confirm it is clinically accurate and appropriate to send. I remain professionally responsible for all patient correspondence.</div>
+      </div>
+      <div class="disc">Always review before sending. AI-generated draft. You remain clinically and legally responsible for all correspondence.</div>
     </div>
-  );
-}
+  </div>
 
-// Step header
-function StepHead({ n, label, sub }) {
-  return (
-    <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:12}}>
-      <div style={{width:22,height:22,borderRadius:"50%",background:G.gd,color:"white",fontSize:11,fontWeight:700,display:"grid",placeItems:"center",flexShrink:0}}>{n}</div>
-      <span style={{fontSize:14,fontWeight:600,color:G.gd}}>{label}</span>
-      {sub && <span style={{fontSize:12,color:G.tmu}}>{sub}</span>}
+  <footer><span class="fbrand">MedLetter</span><div class="flinks"><a onclick="go('pg-land')">Home</a><a>Privacy</a><a>Terms</a></div><div class="fcopy">© 2026 MedLetter · medletter.app</div></footer>
+</div>
+
+<!-- EMAIL MODAL -->
+<div class="moverlay" id="em-modal" onclick="if(event.target===this)cModal('em-modal')">
+  <div class="modal">
+    <div class="mhead"><button class="mcls" onclick="cModal('em-modal')">×</button><h2>Send Letter by Email</h2><p>Send to your secretary or directly to the recipient</p></div>
+    <div class="mbody">
+      <div class="minfo">This opens your email app with the letter pre-filled. Your secretary can then file it or forward it.</div>
+      <div class="field"><label>Send to (required)</label><input type="email" id="em-to" placeholder="secretary@practice.com"></div>
+      <div class="field"><label>CC (optional)</label><input type="email" id="em-cc" placeholder="your own email for records"></div>
+      <div class="field"><label>Note (optional)</label><textarea id="em-note" style="min-height:55px" placeholder="e.g. Please attach to patient file."></textarea></div>
+      <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:9px 11px;font-size:12px;color:#92400e;margin-bottom:14px">Always review before sending. The doctor remains responsible for all correspondence.</div>
+      <button class="btn btn-g btn-lg btn-w" onclick="sendEmail()">Open in Email App</button>
     </div>
-  );
-}
+  </div>
+</div>
 
-// Nav bar
-function Nav({ setPage, user }) {
-  return (
-    <div style={{background:G.wh,borderBottom:`1.5px solid ${G.brd}`,padding:"0 20px",height:58,display:"flex",alignItems:"center",justifyContent:"space-between",position:"sticky",top:0,zIndex:100,boxShadow:`0 2px 10px ${G.shd}`}}>
-      <LogoFull onClick={() => setPage("land")}/>
-      <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap"}}>
-        {user && <span style={{fontSize:11,background:"#fffbeb",border:"1px solid #fde68a",borderRadius:20,padding:"3px 10px",color:G.amber,fontWeight:600}}>15 days left in trial</span>}
-        {user && <button style={btnO("sm")} onClick={() => setPage("history")}>{Icon.hist} History</button>}
-        {user && <button style={btnO("sm")} onClick={() => setPage("pricing")}>Pricing</button>}
-        {user
-          ? <button style={{...btnO("sm"),borderColor:G.brd,color:G.tmu}} onClick={() => setPage("land")}>Sign out</button>
-          : <><button style={btnO("sm")} onClick={() => setPage("login")}>Log in</button><button style={btnG("sm")} onClick={() => setPage("signup")}>Free trial</button></>
-        }
-      </div>
+<!-- PLAN MODAL -->
+<div class="moverlay" id="plan-modal" onclick="if(event.target===this)cModal('plan-modal')">
+  <div class="modal">
+    <div class="mhead"><button class="mcls" onclick="cModal('plan-modal')">×</button><h2>Your trial has ended</h2><p>Pick a plan to keep writing letters in seconds</p></div>
+    <div class="mbody">
+      <div class="minfo">No charge until you confirm. Cancel any time.</div>
+      <div class="pmcards" id="pmc"></div>
+      <button class="btn btn-g btn-lg btn-w" id="pcnf" onclick="cnfPlan()">Continue with Pro</button>
+      <div style="text-align:center;margin-top:9px"><button style="background:transparent;border:none;color:var(--tmu);font-size:13px;cursor:pointer" onclick="cModal('plan-modal')">Remind me tomorrow</button></div>
     </div>
-  );
-}
+  </div>
+</div>
 
-// Email modal
-function EmailModal({ letter, typeName, patientName, doctorName, onClose }) {
-  const [to, setTo] = useState(""); const [cc, setCc] = useState(""); const [note, setNote] = useState(""); const [done, setDone] = useState(false);
-  const send = () => {
-    const sub = encodeURIComponent(`Medical Letter: ${typeName}${patientName?" — "+patientName:""}`);
-    const body = encodeURIComponent(`Dear Secretary,\n\nPlease find the ${typeName}${patientName?" for patient "+patientName:""} below, generated via MedLetter.\n\n${note?"Note: "+note+"\n\n":""}---\n\n${letter}\n\n---\n\nSincerely,\n${doctorName||"The Treating Physician"}`);
-    window.open(`mailto:${encodeURIComponent(to)}?subject=${sub}${cc?"&cc="+encodeURIComponent(cc):""}&body=${body}`);
-    setDone(true);
-  };
-  return (
-    <div onClick={e=>e.target===e.currentTarget&&onClose()} style={{position:"fixed",inset:0,background:"rgba(15,45,28,0.6)",zIndex:600,display:"flex",alignItems:"center",justifyContent:"center",padding:16,backdropFilter:"blur(4px)"}}>
-      <div style={{background:G.wh,borderRadius:18,maxWidth:460,width:"100%",boxShadow:"0 24px 80px rgba(0,0,0,0.25)",overflow:"hidden"}}>
-        <div style={{background:G.gd,padding:"20px 24px 16px",color:"white",position:"relative"}}>
-          <button onClick={onClose} style={{position:"absolute",top:14,right:18,background:"transparent",border:"none",color:"rgba(255,255,255,0.7)",fontSize:20,cursor:"pointer",lineHeight:1}}>×</button>
-          <div style={{fontFamily:"Georgia,serif",fontSize:19,fontWeight:700,marginBottom:3,display:"flex",alignItems:"center",gap:8}}><span style={{color:"white"}}>{Icon.mail}</span> Send by Email</div>
-          <p style={{fontSize:12,color:"rgba(255,255,255,0.7)",margin:0}}>Opens your email client with the letter pre-filled</p>
-        </div>
-        {done
-          ? <div style={{padding:28,textAlign:"center"}}>
-              <div style={{width:52,height:52,borderRadius:"50%",background:G.gl,display:"grid",placeItems:"center",margin:"0 auto 14px",color:G.gd}}><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="20,6 9,17 4,12"/></svg></div>
-              <div style={{fontFamily:"Georgia,serif",fontSize:18,fontWeight:700,color:G.td,marginBottom:8}}>Email client opened</div>
-              <p style={{fontSize:13,color:G.tmu,lineHeight:1.6,marginBottom:20}}>Review the letter in your email app and send when ready.</p>
-              <button onClick={onClose} style={{...btnG(),borderRadius:10}}>Done</button>
-            </div>
-          : <div style={{padding:"18px 22px 24px",display:"flex",flexDirection:"column",gap:13}}>
-              <div style={{background:G.gl,border:`1px solid ${G.gbr}`,borderRadius:8,padding:"10px 13px",fontSize:12,color:G.tm,display:"flex",gap:7,alignItems:"flex-start"}}>
-                <span style={{color:G.gm,flexShrink:0,marginTop:1}}>{Icon.info}</span>
-                Your secretary can receive this letter and attach it to the patient file or forward it directly.
-              </div>
-              <div style={{display:"flex",flexDirection:"column",gap:5}}><label style={lbl}>Send to (required)</label><input style={inp} type="email" placeholder="secretary@practice.com" value={to} onChange={e=>setTo(e.target.value)}/></div>
-              <div style={{display:"flex",flexDirection:"column",gap:5}}><label style={lbl}>CC (optional)</label><input style={inp} type="email" placeholder="e.g. your own email for records" value={cc} onChange={e=>setCc(e.target.value)}/></div>
-              <div style={{display:"flex",flexDirection:"column",gap:5}}><label style={lbl}>Note to secretary (optional)</label><textarea style={{...inp,minHeight:60,lineHeight:1.5,resize:"vertical"}} placeholder="e.g. Please attach to patient file and send a copy to the specialist." value={note} onChange={e=>setNote(e.target.value)}/></div>
-              <div style={{background:"#fffbeb",border:"1.5px solid #fde68a",borderRadius:8,padding:"10px 13px",fontSize:12,color:"#92400e",display:"flex",gap:7,alignItems:"flex-start"}}><span style={{flexShrink:0,marginTop:1}}>{Icon.warn}</span>Always review the letter before sending. The doctor remains responsible for all patient correspondence.</div>
-              <button onClick={send} disabled={!to} style={{...btnG(),padding:"13px",borderRadius:10,width:"100%",justifyContent:"center",opacity:to?1:0.5,cursor:to?"pointer":"not-allowed"}}>Open in Email App</button>
-            </div>
-        }
-      </div>
-    </div>
-  );
-}
+<script>
+const RAILWAY = 'https://nodejs-production-59b5.up.railway.app/generate';
 
-// Letter history panel
-function HistoryPage({ setPage, history, onLoad }) {
-  return (
-    <div style={{minHeight:"100vh",background:G.ow,fontFamily:"system-ui"}}>
-      <Nav setPage={setPage} user={true}/>
-      <div style={{maxWidth:760,margin:"0 auto",padding:"28px 16px 60px"}}>
-        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:24}}>
-          <div>
-            <h1 style={{fontFamily:"Georgia,serif",fontSize:24,fontWeight:700,color:G.td}}>Letter History</h1>
-            <p style={{fontSize:13,color:G.tmu,marginTop:4}}>Your previously generated letters</p>
-          </div>
-          <button style={btnG()} onClick={()=>setPage("app")}>New Letter</button>
-        </div>
-        {history.length === 0
-          ? <div style={{background:G.wh,border:`1.5px solid ${G.brd}`,borderRadius:14,padding:"48px 24px",textAlign:"center"}}>
-              <div style={{color:G.tmu,marginBottom:12}}>{Icon.hist}</div>
-              <div style={{fontFamily:"Georgia,serif",fontSize:18,fontWeight:600,color:G.td,marginBottom:8}}>No letters yet</div>
-              <p style={{fontSize:13,color:G.tmu,marginBottom:20}}>Letters you generate will appear here for easy reference and reuse.</p>
-              <button style={btnG()} onClick={()=>setPage("app")}>Generate your first letter</button>
-            </div>
-          : <div style={{display:"flex",flexDirection:"column",gap:12}}>
-              {history.map((item, i) => (
-                <div key={i} style={{background:G.wh,border:`1.5px solid ${G.brd}`,borderRadius:12,padding:"16px 20px",display:"flex",alignItems:"center",justifyContent:"space-between",gap:16,flexWrap:"wrap"}}>
-                  <div style={{display:"flex",alignItems:"center",gap:12,flex:1,minWidth:200}}>
-                    <div style={{width:36,height:36,borderRadius:8,background:G.gl,display:"grid",placeItems:"center",color:G.gd,flexShrink:0}}>{Icon.doc}</div>
-                    <div>
-                      <div style={{fontSize:13,fontWeight:600,color:G.td}}>{item.typeName}</div>
-                      <div style={{fontSize:12,color:G.tmu}}>{item.patientName} · {item.date}</div>
-                    </div>
-                  </div>
-                  <div style={{display:"flex",gap:8}}>
-                    <button style={btnO("sm")} onClick={() => { onLoad(item); setPage("app"); }}>Load</button>
-                    <button style={btnO("sm")} onClick={() => { navigator.clipboard.writeText(item.letter); }}>Copy</button>
-                  </div>
-                </div>
-              ))}
-            </div>
-        }
-      </div>
-    </div>
-  );
-}
+const C = {
+  UK:{lbl:'United Kingdom',ll:'GMC Number',lp:'e.g. 7654321',lh:'General Medical Council registration number',cur:'£',pr:{Starter:19,Pro:39,Practice:89},dl:'en-GB',
+    lt:[{id:'sick_note',n:'Sick Note',d:'Absence certificate for employer or school'},{id:'referral',n:'Specialist Referral',d:'Refer patient with full clinical context'},{id:'fitness',n:'Fitness to Work',d:'Return-to-work or fitness certificate'},{id:'insurance',n:'Insurance Letter',d:'Medical report for insurance claim'},{id:'medication',n:'Medication Letter',d:'Patient-friendly medication explanation'},{id:'custom',n:'Custom Letter',d:'Council, legal, housing and more'}],
+    tn:{sick_note:'Sick Note / Absence Certificate',referral:'Specialist Referral Letter',fitness:'Fitness to Work Certificate',insurance:'Insurance Medical Letter',medication:'Medication Explanation Letter',custom:'Custom Medical Letter'}},
+  US:{lbl:'United States',ll:'NPI Number',lp:'10-digit NPI e.g. 1234567890',lh:'National Provider Identifier from NPPES',cur:'$',pr:{Starter:24,Pro:49,Practice:109},dl:'en-US',
+    lt:[{id:'sick_note',n:'Medical Leave Note',d:'Absence documentation for employer or school'},{id:'referral',n:'Specialist Referral',d:'Refer patient with full clinical context'},{id:'prior_auth',n:'Prior Authorization',d:'Insurance pre-authorization request'},{id:'fmla',n:'FMLA Certification',d:'Family & Medical Leave Act documentation'},{id:'medication',n:'Medication Letter',d:'Patient-friendly medication explanation'},{id:'custom',n:'Custom Letter',d:'Disability, legal, school and more'}],
+    tn:{sick_note:'Medical Leave Note',referral:'Specialist Referral Letter',prior_auth:'Prior Authorization Request',fmla:'FMLA Certification Letter',medication:'Medication Explanation Letter',custom:'Custom Medical Letter'}}
+};
+const ST = ['AL','AK','AZ','AR','CA','CO','CT','DE','FL','GA','HI','ID','IL','IN','IA','KS','KY','LA','ME','MD','MA','MI','MN','MS','MO','MT','NE','NV','NH','NJ','NM','NY','NC','ND','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT','VT','VA','WA','WV','WI','WY','DC'];
 
-// Plan modal
-function PlanModal({ onClose, country }) {
-  const C = COUNTRY[country];
-  const [sel, setSel] = useState("Pro");
-  return (
-    <div onClick={e=>e.target===e.currentTarget&&onClose()} style={{position:"fixed",inset:0,background:"rgba(15,45,28,0.55)",zIndex:500,display:"flex",alignItems:"center",justifyContent:"center",padding:16,backdropFilter:"blur(4px)"}}>
-      <div style={{background:G.wh,borderRadius:18,maxWidth:500,width:"100%",boxShadow:"0 24px 80px rgba(0,0,0,0.25)",overflow:"hidden"}}>
-        <div style={{background:G.gd,padding:"20px 24px 16px",color:"white",textAlign:"center",position:"relative"}}>
-          <button onClick={onClose} style={{position:"absolute",top:12,right:16,background:"transparent",border:"none",color:"rgba(255,255,255,0.7)",fontSize:20,cursor:"pointer",lineHeight:1}}>×</button>
-          <div style={{fontFamily:"Georgia,serif",fontSize:20,fontWeight:700,marginBottom:3}}>Your trial has ended</div>
-          <p style={{fontSize:12,color:"rgba(255,255,255,0.75)",margin:0}}>Choose a plan to continue generating letters</p>
-        </div>
-        <div style={{padding:"18px 20px 22px"}}>
-          <div style={{background:G.gl,border:`1px solid ${G.gbr}`,borderRadius:8,padding:"10px 13px",fontSize:12,color:G.tm,display:"flex",gap:7,marginBottom:14}}>{Icon.lock} No charge until confirmed. Cancel any time.</div>
-          <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:10,marginBottom:14}}>
-            {["Starter","Pro","Practice"].map(p=>(
-              <div key={p} onClick={()=>setSel(p)} style={{border:`2px solid ${sel===p?G.gd:G.brd}`,background:sel===p?G.gl:G.wh,borderRadius:10,padding:"13px 10px",cursor:"pointer",textAlign:"center"}}>
-                <div style={{fontSize:11,fontWeight:700,color:G.tmu,textTransform:"uppercase",letterSpacing:0.8,marginBottom:4}}>{p==="Pro"?"Pro — Popular":p}</div>
-                <div style={{fontFamily:"Georgia,serif",fontSize:22,fontWeight:700,color:G.td}}>{C.currency}{C.prices[p]}</div>
-                <div style={{fontSize:10,color:G.tmu,marginTop:2}}>per month</div>
-              </div>
-            ))}
-          </div>
-          <button onClick={onClose} style={{...btnG(),padding:"13px",borderRadius:10,width:"100%",justifyContent:"center",fontSize:14}}>
-            Continue with {sel} — {C.currency}{C.prices[sel]}/month
-          </button>
-          <div style={{textAlign:"center",marginTop:10}}><button onClick={onClose} style={{background:"transparent",border:"none",color:G.tmu,fontSize:12,cursor:"pointer"}}>Remind me tomorrow</button></div>
-        </div>
-      </div>
-    </div>
-  );
-}
+let ctry='UK', authC='UK', ltType='sick_note', ltxt='', hist=[], selPlan='Pro', rev=false, prC='UK';
 
-// Main app page
-function AppPage({ setPage, user, country, history, addToHistory, loadedLetter }) {
-  const C = COUNTRY[country];
-  const voice = useVoice();
-  const [letterType, setLetterType] = useState(loadedLetter?.letterType || C.letterTypes[0].id);
-  const [form, setForm] = useState({
-    patientName: loadedLetter?.patientName || "",
-    dob: loadedLetter?.dob || "",
-    doctorName: loadedLetter?.doctorName || user?.name || "",
-    practice: loadedLetter?.practice || user?.practice || "",
-    recipient: loadedLetter?.recipient || "",
-    letterDate: new Date().toLocaleDateString(C.dateLocale,{day:"numeric",month:"long",year:"numeric"}),
-    notes: loadedLetter?.notes || "",
-    customNote: "", tone:"formal", lang:"medical",
-  });
-  const [loading, setLoading] = useState(false);
-  const [letter, setLetter] = useState(loadedLetter?.letter || "");
-  const [error, setError] = useState("");
-  const [copied, setCopied] = useState(false);
-  const [showEmail, setShowEmail] = useState(false);
-  const [showPlan, setShowPlan] = useState(false);
-  const [showPhrases, setShowPhrases] = useState(false);
+function go(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0);if(id==='pg-app'){buildTypeGrid();const d=document.getElementById('f-date');if(!d.value)d.value=new Date().toLocaleDateString(C[ctry].dl,{day:'numeric',month:'long',year:'numeric'});}}
 
-  const up = k => e => setForm(p => ({...p,[k]:e.target.value}));
-  const wordCount = letter.split(/\s+/).filter(Boolean).length;
+function demoApp(){document.getElementById('nav-name').textContent='Demo Mode';go('pg-app');}
 
-  const buildPrompt = () => {
-    const tones = {formal:"formal and professional",concise:"concise and direct — no unnecessary words",detailed:"detailed and comprehensive",empathetic:"professional but warm and empathetic"};
-    const langs = {medical:"Use appropriate medical terminology for a professional audience.",plain:"Use plain simple language that a non-medical person can easily understand. Avoid all jargon."};
-    const typeName = C.typeNames[letterType] || "Medical Letter";
-    const ctx = country==="UK"
-      ? "UK medical practice. Follow NHS/UK letter conventions, British spelling, date format: DD Month YYYY."
-      : "US medical practice. Follow US conventions, American spelling, reference FMLA/ADA/insurance frameworks where relevant, date format: Month DD, YYYY.";
-    return `You are a senior medical secretary. Draft a complete, ready-to-send ${typeName} for a ${ctx}
+function lndCtry(c,btn){ctry=c;document.querySelectorAll('#luk,#lus').forEach(b=>b.classList.remove('on'));btn.classList.add('on');document.getElementById('hero-p').textContent=c==='UK'?'AI-generated sick notes, referrals, insurance letters and more — professionally formatted in seconds.':'AI-generated prior auths, FMLA letters, referrals and more — professionally formatted in seconds.';document.getElementById('types-h').textContent=c==='UK'?'6 letter types for UK doctors':'6 letter types for US physicians';}
 
-Patient: ${form.patientName||"[Patient Name]"}${form.dob?` (DOB: ${form.dob})`:""}
-Addressed to: ${form.recipient||"To Whom It May Concern"}
-Doctor: ${form.doctorName||"The Treating Physician"}${form.practice?`, ${form.practice}`:""}
-Date: ${form.letterDate}
-Clinical details: ${form.notes||"[Clinical notes not provided]"}${letterType==="custom"?`\nSpecific request: ${form.customNote}`:""}
-Tone: ${tones[form.tone]}
-${langs[form.lang]}
+function setAC(c,form){authC=c;['UK','US'].forEach(x=>{const el=document.getElementById(form+'-'+(x==='UK'?'uk':'us'));if(el)el.classList.toggle('on',x===c);});if(form==='su'){const CC=C[c];document.getElementById('su-ll').textContent=CC.ll;document.getElementById('su-li').placeholder=CC.lp;document.getElementById('su-lh').textContent=CC.lh;const sf=document.getElementById('su-stf');sf.style.display=c==='US'?'flex':'none';if(c==='US'&&document.getElementById('su-st').options.length<2){ST.forEach(s=>{const o=document.createElement('option');o.value=o.textContent=s;document.getElementById('su-st').appendChild(o);})}}}
 
-Write ONLY the letter. Format: date, salutation, body paragraphs, professional closing, doctor name and credentials. Start directly with the date.`;
-  };
+function setPC(c){prC=c;document.getElementById('puk').classList.toggle('on',c==='UK');document.getElementById('pus').classList.toggle('on',c==='US');const P=C[c].pr,sym=C[c].cur;[['s',P.Starter],['p',P.Pro],['pr',P.Practice]].forEach(([id,v])=>{document.getElementById(id+'-c').textContent=sym;document.getElementById(id+'-p').textContent=v;});}
 
-  const generate = async () => {
-    setError(""); setLetter(""); setLoading(true);
-    try {
-      const response = await fetch("https://api.anthropic.com/v1/messages", {
-        method:"POST",
-        headers:{"Content-Type":"application/json"},
-        body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1024,messages:[{role:"user",content:buildPrompt()}]})
-      });
-      const json = await response.json();
-      if (!response.ok) throw new Error(json?.error?.message || `Error ${response.status}`);
-      const text = (json.content||[]).filter(b=>b.type==="text").map(b=>b.text).join("").trim();
-      if (!text) throw new Error("No content returned. Please try again.");
-      setLetter(text);
-      addToHistory({ letterType, typeName: C.typeNames[letterType], patientName: form.patientName, doctorName: form.doctorName, practice: form.practice, dob: form.dob, recipient: form.recipient, notes: form.notes, letter: text, date: new Date().toLocaleDateString(C.dateLocale,{day:"numeric",month:"long",year:"numeric"}) });
-    } catch(e) { setError(e.message || "Something went wrong. Please try again."); }
-    finally { setLoading(false); }
-  };
+function doLogin(){const e=document.getElementById('li-em').value.trim(),p=document.getElementById('li-pw').value.trim();if(!e||!p)return;ctry=authC;document.getElementById('nav-name').textContent='Dr. Johnson';document.getElementById('app-badge').innerHTML='<span style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);border-radius:20px;padding:4px 13px;font-size:12px;font-weight:600">'+C[ctry].lbl+' Mode</span>';go('pg-app');}
 
-  const downloadTxt = () => {
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(new Blob([letter],{type:"text/plain"}));
-    a.download = `${C.typeNames[letterType].replace(/\s/g,"-")}-${Date.now()}.txt`;
-    a.click();
-  };
+function doSignup(){const fn=document.getElementById('su-fn').value.trim(),em=document.getElementById('su-em').value.trim(),pw=document.getElementById('su-pw').value.trim(),err=document.getElementById('su-err');if(!fn||!em||!pw){err.textContent='Please fill in your name, email and password.';err.classList.add('on');return;}err.classList.remove('on');ctry=authC;const ln=document.getElementById('su-ln').value.trim();document.getElementById('nav-name').textContent=`Dr. ${fn} ${ln}`.trim();document.getElementById('app-badge').innerHTML='<span style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);border-radius:20px;padding:4px 13px;font-size:12px;font-weight:600">'+C[ctry].lbl+' Mode</span>';const pr=document.getElementById('su-pr').value.trim();if(pr){document.getElementById('f-prac').value=pr;document.getElementById('ap-prac').value=pr;}document.getElementById('f-doc').value=`Dr. ${fn} ${ln}`.trim();go('pg-app');}
 
-  const printLetter = () => {
-    const w = window.open("","_blank");
-    w.document.write(`<!DOCTYPE html><html><head><title>${C.typeNames[letterType]}</title><style>body{font-family:Arial,sans-serif;max-width:680px;margin:60px auto;padding:0 40px;font-size:14px;line-height:1.85;color:#1a1a1a}pre{white-space:pre-wrap;font-family:Arial,sans-serif}@media print{body{margin:0}}</style></head><body><pre>${letter.replace(/&/g,"&amp;").replace(/</g,"&lt;")}</pre></body></html>`);
-    w.document.close(); w.focus(); w.print();
-  };
+function buildTypeGrid(){const grid=document.getElementById('type-grid');grid.innerHTML='';C[ctry].lt.forEach(t=>{const b=document.createElement('button');b.className='tc-btn'+(t.id===ltType?' on':'');b.innerHTML=`<div class="ticon"><svg width="13" height="13" viewBox="0 0 20 20" fill="none"><rect x="8" y="2" width="4" height="16" rx="2" fill="white"/><rect x="2" y="8" width="16" height="4" rx="2" fill="white"/></svg></div><div class="tname">${t.n}</div><div class="tdesc">${t.d}</div>`;b.onclick=()=>{document.querySelectorAll('.tc-btn').forEach(x=>x.classList.remove('on'));b.classList.add('on');ltType=t.id;document.getElementById('f-cust-wrap').style.display=t.id==='custom'?'flex':'none';};grid.appendChild(b);});document.getElementById('f-dob-l').textContent=ctry==='UK'?'Date of Birth (DD/MM/YYYY)':'Date of Birth (MM/DD/YYYY)';}
 
-  const copyText = () => { navigator.clipboard.writeText(letter).then(()=>{setCopied(true);setTimeout(()=>setCopied(false),2500);}); };
+const v=id=>(document.getElementById(id)||{}).value||'';
 
-  return (
-    <div style={{fontFamily:"system-ui,sans-serif",background:G.ow,minHeight:"100vh"}}>
-      <style>{`@keyframes spin{to{transform:rotate(360deg)}} @keyframes mp{0%,100%{opacity:1}50%{opacity:0.3}}`}</style>
-      <Nav setPage={setPage} user={user}/>
+async function gen(){const btn=document.getElementById('gbtn'),sp=document.getElementById('spin'),lbl=document.getElementById('glbl'),err=document.getElementById('gen-err'),wrap=document.getElementById('outwrap');err.classList.remove('on');btn.disabled=true;sp.style.display='block';lbl.textContent='Generating your letter...';ltxt='';rev=false;document.getElementById('rcb').checked=false;document.getElementById('rchk').classList.remove('on');const eb=document.getElementById('emb');eb.disabled=true;eb.style.opacity='.45';eb.style.cursor='not-allowed';
+const CC=C[ctry],tones={formal:'formal and professional',concise:'concise and direct',detailed:'detailed and comprehensive',empathetic:'professional but warm and empathetic'},langs={medical:'Use appropriate medical terminology for a professional audience.',plain:'Use plain simple English. Avoid jargon.'},ctx=ctry==='UK'?'UK medical practice. Follow NHS/UK conventions, British spelling, date format DD Month YYYY.':'US medical practice. Follow US conventions, American spelling, reference FMLA/ADA/insurance where relevant.',tn=CC.tn[ltType]||'Medical Letter';
+const prompt=`You are a senior medical secretary. Draft a complete ${tn} for a ${ctx}\nPatient: ${v('f-pat')||'[Patient Name]'}${v('f-dob')?` (DOB: ${v('f-dob')})`:''}\nAddressed to: ${v('f-rec')||'To Whom It May Concern'}\nDoctor: ${v('f-doc')||'The Treating Physician'}${v('f-prac')?`, ${v('f-prac')}`:''}\nDate: ${v('f-date')}\nClinical details: ${v('f-notes')||'[See clinical notes]'}${ltType==='custom'?`\nRequest: ${v('f-cust')}`:''}\nTone: ${tones[v('f-tone')||'formal']}\n${langs[v('f-lang')||'medical']}\nWrite ONLY the letter. Format: date, salutation, body paragraphs, professional closing, doctor name and credentials. Start with the date.`;
+try{const res=await fetch(RAILWAY,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1024,messages:[{role:'user',content:prompt}]})});const data=await res.json();if(!res.ok)throw new Error(data?.error?.message||`Error ${res.status}`);const txt=(data.content||[]).filter(b=>b.type==='text').map(b=>b.text).join('').trim();if(!txt)throw new Error('No content returned. Please try again.');ltxt=txt;document.getElementById('ltxt').textContent=txt;document.getElementById('lfname').textContent=tn;wrap.classList.add('on');wrap.scrollIntoView({behavior:'smooth',block:'start'});hist.unshift({id:Date.now(),type:tn,patient:v('f-pat')||'Patient',date:v('f-date'),text:txt});if(hist.length>20)hist.pop();renderHist();}catch(e){err.textContent=e.message;err.classList.add('on');}finally{btn.disabled=false;sp.style.display='none';lbl.textContent='Generate Letter';}}
 
-      <div style={{background:G.gd,color:"white",textAlign:"center",padding:"26px 20px 22px"}}>
-        <h1 style={{fontFamily:"Georgia,serif",fontSize:24,fontWeight:700,marginBottom:8}}>Medical Letter Generator</h1>
-        <p style={{fontSize:13,color:"rgba(255,255,255,0.72)",margin:"0 auto",lineHeight:1.55,maxWidth:480}}>
-          {country==="UK"?"Sick notes, referrals, fitness to work and more — dictate or type your clinical notes.":"Medical leave, FMLA, prior auth and more — dictate or type your clinical notes."}
-        </p>
-        {voice.supported && <p style={{fontSize:11,color:"rgba(255,255,255,0.55)",marginTop:8}}>Voice dictation active — select the microphone icon on any field to dictate</p>}
-      </div>
+function toggleRev(){rev=!rev;document.getElementById('rcb').checked=rev;document.getElementById('rchk').classList.toggle('on',rev);const eb=document.getElementById('emb');eb.disabled=!rev;eb.style.opacity=rev?'1':'.45';eb.style.cursor=rev?'pointer':'not-allowed';}
+function cpyLetter(){if(!ltxt)return;navigator.clipboard.writeText(ltxt).then(()=>{const b=document.getElementById('copybtn');b.textContent='Copied!';setTimeout(()=>b.textContent='Copy',2000);});}
+function dlLetter(){if(!ltxt)return;const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([ltxt],{type:'text/plain'}));a.download=`MedLetter-${Date.now()}.txt`;a.click();}
+function openEmailMod(){document.getElementById('em-modal').classList.add('on');}
+function sendEmail(){const to=document.getElementById('em-to').value.trim();if(!to)return;const note=document.getElementById('em-note').value.trim(),cc=document.getElementById('em-cc').value.trim(),sub=encodeURIComponent(`Medical Letter — ${document.getElementById('lfname').textContent}`),body=encodeURIComponent((note?`Note: ${note}\n\n---\n\n`:'')+ltxt);window.open(`mailto:${encodeURIComponent(to)}?subject=${sub}${cc?`&cc=${encodeURIComponent(cc)}`:''}&body=${body}`);cModal('em-modal');}
+function renderHist(){const l=document.getElementById('hist-list'),c=document.getElementById('hcnt');c.textContent=hist.length?`(${hist.length})`:'';if(!hist.length){l.innerHTML='<div class="hempty">No letters yet.</div>';return;}l.innerHTML=hist.map(h=>`<div class="hitem"><div><div class="hititle">${h.type}</div><div class="hisub">${h.patient} · ${h.date}</div></div><button class="btn btn-o" style="padding:4px 11px;font-size:11px" onclick="loadHist(${h.id})">View</button></div>`).join('');}
+function loadHist(id){const item=hist.find(h=>h.id===id);if(!item)return;ltxt=item.text;document.getElementById('ltxt').textContent=item.text;document.getElementById('lfname').textContent=item.type;document.getElementById('outwrap').classList.add('on');tog('panel-hist');document.getElementById('outwrap').scrollIntoView({behavior:'smooth'});}
+function tog(id){document.getElementById(id).classList.toggle('on');}
+function cModal(id){document.getElementById(id).classList.remove('on');}
+function renderPlanCards(){const CC=C[ctry];document.getElementById('pmc').innerHTML=['Starter','Pro','Practice'].map(n=>`<div class="pmcard ${n===selPlan?'on':''}" onclick="selPlanFn('${n}')"><div class="pmname">${n==='Pro'?'★ Pro':n}</div><div class="pmprice">${CC.cur}${CC.pr[n]}</div><div class="pmperiod">per month</div></div>`).join('');}
+function selPlanFn(n){selPlan=n;renderPlanCards();const CC=C[ctry];document.getElementById('pcnf').textContent=`Continue with ${n} — ${CC.cur}${CC.pr[n]}/month`;}
+function cnfPlan(){cModal('plan-modal');alert(`${selPlan} plan selected — in production this redirects to Stripe checkout.`);}
 
-      <div style={{maxWidth:760,margin:"0 auto",padding:"24px 16px 80px"}}>
-
-        {/* Step 1 — Letter type */}
-        <StepHead n="1" label="Select letter type"/>
-        <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:8,marginBottom:24}}>
-          {C.letterTypes.map(t => (
-            <button key={t.id} onClick={()=>setLetterType(t.id)} style={{background:letterType===t.id?G.gl:G.wh,border:`2px solid ${letterType===t.id?G.gd:G.brd}`,borderRadius:10,padding:"14px 12px",cursor:"pointer",textAlign:"left",fontFamily:"system-ui",boxShadow:letterType===t.id?`0 0 0 3px rgba(26,107,60,.08)`:"none"}}>
-              <div style={{width:28,height:28,borderRadius:6,background:letterType===t.id?G.gd:G.gl,display:"grid",placeItems:"center",marginBottom:8,fontSize:11,fontWeight:700,color:letterType===t.id?"white":G.gm}}>
-                {t.label}
-              </div>
-              <div style={{fontSize:12,fontWeight:600,color:G.td,marginBottom:2}}>{t.name}</div>
-              <div style={{fontSize:10,color:G.tmu,lineHeight:1.35}}>{t.desc}</div>
-            </button>
-          ))}
-        </div>
-
-        {/* Step 2 — Details */}
-        <StepHead n="2" label="Patient and clinical details" sub={voice.supported ? "— microphone icon to dictate any field" : ""}/>
-        <div style={{background:G.wh,border:`1.5px solid ${G.brd}`,borderRadius:14,padding:20,marginBottom:14,boxShadow:`0 2px 10px ${G.shd}`}}>
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:14}}>
-            <Field id="pn" label="Patient Full Name" value={form.patientName} onChange={up("patientName")} placeholder="e.g. John Smith" voice={voice}/>
-            <Field id="dob" label={country==="UK"?"Date of Birth":"Date of Birth (MM/DD/YYYY)"} value={form.dob} onChange={up("dob")} placeholder={country==="UK"?"e.g. 15/03/1980":"e.g. 03/15/1980"} voice={voice}/>
-            <Field id="dn" label="Doctor Name" value={form.doctorName} onChange={up("doctorName")} placeholder="e.g. Dr. Sarah Johnson" voice={voice}/>
-            <Field id="pr" label={country==="UK"?"Practice / Hospital":"Clinic / Hospital"} value={form.practice} onChange={up("practice")} placeholder={country==="UK"?"e.g. City Medical Centre":"e.g. Riverside Family Practice"} voice={voice}/>
-            <Field id="re" label="Letter Addressed To" value={form.recipient} onChange={up("recipient")} placeholder="e.g. To Whom It May Concern" voice={voice}/>
-            <div style={{display:"flex",flexDirection:"column",gap:5}}>
-              <label style={lbl}>Letter Date</label>
-              <input style={inp} value={form.letterDate} onChange={up("letterDate")}/>
-            </div>
-            <div style={{gridColumn:"1/-1"}}>
-              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:5}}>
-                <label style={lbl}>Clinical Notes and Key Details</label>
-                <button onClick={()=>setShowPhrases(!showPhrases)} style={{fontSize:11,color:G.gm,background:"transparent",border:"none",cursor:"pointer",fontWeight:600,padding:0}}>
-                  {showPhrases?"Hide quick phrases":"Quick phrases"}
-                </button>
-              </div>
-              {showPhrases && (
-                <div style={{background:G.gl,border:`1px solid ${G.gbr}`,borderRadius:8,padding:"10px 12px",marginBottom:10,display:"flex",flexWrap:"wrap",gap:6}}>
-                  {C.quickPhrases.map((ph,i) => (
-                    <button key={i} onClick={() => setForm(p=>({...p,notes:p.notes?(p.notes+" "+ph):ph}))}
-                      style={{background:G.wh,border:`1px solid ${G.gbr}`,borderRadius:20,padding:"4px 12px",fontSize:11,color:G.tm,cursor:"pointer",fontFamily:"system-ui"}}>
-                      + {ph.length>40?ph.slice(0,40)+"...":ph}
-                    </button>
-                  ))}
-                </div>
-              )}
-              <div style={{position:"relative"}}>
-                <textarea style={{...inp,minHeight:90,lineHeight:1.6,resize:"vertical",paddingRight:voice.supported?44:14}}
-                  placeholder={country==="UK"?"e.g. Patient has acute lower back pain since 3 April. Unable to perform manual duties. Expected recovery 2-3 weeks.":"e.g. Patient has acute lumbar pain since April 3rd. Unable to perform manual duties. ICD-10: M54.5. Expected recovery 2-3 weeks."}
-                  value={form.notes} onChange={up("notes")}/>
-                {voice.supported && (
-                  <button type="button" onClick={() => voice.listenId==="no" ? voice.stop() : voice.start("no", t=>setForm(p=>({...p,notes:p.notes?p.notes+" "+t:t})))}
-                    style={{position:"absolute",right:8,top:10,width:28,height:28,borderRadius:"50%",border:"none",cursor:"pointer",background:voice.listenId==="no"?"#e53e3e":G.gl,display:"flex",alignItems:"center",justifyContent:"center",color:voice.listenId==="no"?"white":G.gd}}>
-                    {voice.listenId==="no"?Icon.stop:Icon.mic}
-                  </button>
-                )}
-              </div>
-              <div style={{fontSize:11,color:G.tmu,marginTop:4}}>Include diagnosis, duration, restrictions and expected recovery. More detail = better letter.</div>
-            </div>
-            {letterType==="custom" && (
-              <div style={{gridColumn:"1/-1"}}>
-                <Field id="cn" label="Describe What You Need" value={form.customNote} onChange={up("customNote")} placeholder="e.g. A letter explaining why my patient requires workplace adjustments due to their medical condition..." voice={voice} multiline/>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Step 3 — Tone + Signature builder */}
-        <StepHead n="3" label="Tone, language and signature"/>
-        <div style={{background:G.wh,border:`1.5px solid ${G.brd}`,borderRadius:14,padding:20,marginBottom:20,boxShadow:`0 2px 10px ${G.shd}`}}>
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:14,marginBottom:14}}>
-            <div style={{display:"flex",flexDirection:"column",gap:5}}>
-              <label style={lbl}>Tone</label>
-              <select style={inp} value={form.tone} onChange={up("tone")}>
-                <option value="formal">Formal and Professional</option>
-                <option value="concise">Concise and Direct</option>
-                <option value="detailed">Detailed and Comprehensive</option>
-                <option value="empathetic">Empathetic and Supportive</option>
-              </select>
-            </div>
-            <div style={{display:"flex",flexDirection:"column",gap:5}}>
-              <label style={lbl}>Language Level</label>
-              <select style={inp} value={form.lang} onChange={up("lang")}>
-                <option value="medical">Medical Professional (for colleagues)</option>
-                <option value="plain">Plain Language (for patients and employers)</option>
-              </select>
-            </div>
-          </div>
-          {/* Signature builder */}
-          <div style={{background:G.gl,border:`1px solid ${G.gbr}`,borderRadius:8,padding:"12px 14px"}}>
-            <div style={{fontSize:11,fontWeight:700,textTransform:"uppercase",letterSpacing:"0.9px",color:G.tmu,marginBottom:10}}>Signature Block</div>
-            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
-              <Field id="sig_name" label="Full Name and Title" value={form.doctorName} onChange={up("doctorName")} placeholder="Dr. Sarah Johnson" voice={voice}/>
-              <Field id="sig_cred" label="Credentials (optional)" value={form.credentials||""} onChange={e=>setForm(p=>({...p,credentials:e.target.value}))} placeholder={country==="UK"?"e.g. MBBS, MRCGP":"e.g. MD, FAAFP"} voice={voice}/>
-            </div>
-          </div>
-        </div>
-
-        {/* Generate */}
-        <button onClick={generate} disabled={loading} style={{width:"100%",padding:16,background:loading?G.gm:G.gd,border:"none",borderRadius:12,color:"white",fontFamily:"system-ui",fontSize:15,fontWeight:600,cursor:loading?"not-allowed":"pointer",display:"flex",alignItems:"center",justifyContent:"center",gap:10,opacity:loading?0.85:1}}>
-          {loading && <span style={{width:16,height:16,border:"2px solid rgba(255,255,255,0.3)",borderTop:"2px solid white",borderRadius:"50%",display:"inline-block",animation:"spin 0.65s linear infinite"}}/>}
-          {loading?"Generating letter...":"Generate Letter"}
-        </button>
-
-        {/* Clinical review checkbox - shown after generation */}
-        {letter && (
-          <div style={{marginTop:14,padding:"12px 16px",background:reviewed?"#f0faf5":"#fffbeb",border:`1.5px solid ${reviewed?G.gbr:"#fde68a"}`,borderRadius:10,display:"flex",alignItems:"flex-start",gap:12,transition:"all 0.2s"}}>
-            <input type="checkbox" id="reviewed" checked={reviewed} onChange={e=>setReviewed(e.target.checked)} style={{width:18,height:18,accentColor:G.gd,marginTop:1,flexShrink:0,cursor:"pointer"}}/>
-            <label htmlFor="reviewed" style={{fontSize:13,color:G.td,lineHeight:1.55,cursor:"pointer"}}>
-              <strong>I have reviewed this letter</strong> and confirm it is clinically accurate and appropriate to send. I understand I remain professionally responsible for all patient correspondence.
-            </label>
-          </div>
-        )}
-
-        {error && (
-          <div style={{marginTop:12,padding:"12px 14px",background:"#fff5f5",border:`1.5px solid #fca5a5`,borderRadius:8,color:G.red,fontSize:13,display:"flex",gap:8,alignItems:"flex-start"}}>
-            <span style={{flexShrink:0,marginTop:1}}>{Icon.warn}</span>{error}
-          </div>
-        )}
-
-        {/* Output */}
-        {letter && (
-          <div style={{marginTop:28}}>
-            {/* Toolbar */}
-            <div style={{background:G.wh,border:`1.5px solid ${G.gbr}`,borderRadius:12,padding:"12px 16px",marginBottom:12,display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:10,boxShadow:`0 2px 10px ${G.shd}`}}>
-              <div style={{display:"flex",alignItems:"center",gap:10}}>
-                <div style={{display:"flex",alignItems:"center",gap:6,fontSize:12,fontWeight:600,color:G.gd}}>
-                  <span style={{width:7,height:7,borderRadius:"50%",background:G.gb,boxShadow:`0 0 8px ${G.gb}`,display:"inline-block"}}/>
-                  Letter ready
-                </div>
-                <span style={{fontSize:11,color:G.tmu,background:G.gl,borderRadius:12,padding:"2px 8px"}}>{wordCount} words</span>
-              </div>
-              <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>
-                <button onClick={copyText} style={btnO("sm")}>{copied?Icon.check:Icon.copy} {copied?"Copied":"Copy"}</button>
-                <button onClick={downloadTxt} style={btnO("sm")}>{Icon.dl} Download</button>
-                <button onClick={printLetter} style={btnO("sm")}>{Icon.print} Print</button>
-                <button onClick={()=>setShowEmail(true)} style={btnG("sm")}>{Icon.mail} Email</button>
-              </div>
-            </div>
-
-            {/* Info strip */}
-            <div style={{background:G.gl,border:`1px solid ${G.gbr}`,borderRadius:8,padding:"9px 14px",fontSize:12,color:G.tm,marginBottom:12,lineHeight:1.55}}>
-              Save as a text file to paste into your EHR, print directly, or use Email to send to your secretary for filing.
-            </div>
-
-            {/* Letter preview */}
-            <div style={{background:G.wh,border:`1.5px solid ${G.gbr}`,borderRadius:14,overflow:"hidden",boxShadow:`0 4px 24px ${G.shd}`}}>
-              <div style={{background:G.gd,padding:"10px 18px",display:"flex",alignItems:"center",gap:8}}>
-                {[0.2,0.35,0.55].map((op,i)=><span key={i} style={{width:9,height:9,borderRadius:"50%",background:`rgba(255,255,255,${op})`,display:"inline-block"}}/>)}
-                <span style={{marginLeft:6,fontSize:11,color:"rgba(255,255,255,0.7)",fontWeight:500}}>{C.typeNames[letterType]} — {form.patientName||"Patient"}</span>
-              </div>
-              <div style={{padding:"28px 30px"}}>
-                <pre style={{fontFamily:"system-ui,sans-serif",fontSize:14,lineHeight:1.9,color:G.gd,whiteSpace:"pre-wrap",margin:0,fontWeight:400}}>{letter}</pre>
-              </div>
-            </div>
-
-            {/* Disclaimer */}
-            <div style={{marginTop:14,padding:"12px 16px",background:"#fffbeb",border:`1.5px solid #fde68a`,borderRadius:10,fontSize:12,color:"#92400e",lineHeight:1.6,display:"flex",gap:8,alignItems:"flex-start"}}>
-              <span style={{flexShrink:0,marginTop:1}}>{Icon.warn}</span>
-              <div><strong>Review before sending.</strong> This is an AI-generated draft. You remain clinically and legally responsible for all patient correspondence.</div>
-            </div>
-          </div>
-        )}
-      </div>
-
-      {showEmail && <EmailModal letter={letter} typeName={C.typeNames[letterType]} patientName={form.patientName} doctorName={form.doctorName} onClose={()=>setShowEmail(false)}/>}
-      {showPlan && <PlanModal onClose={()=>setShowPlan(false)} country={country}/>}
-    </div>
-  );
-}
-
-// Signup
-function Signup({ setPage, setUser, country, setCountry }) {
-  const C = COUNTRY[country];
-  const voice = useVoice();
-  const [f, setF] = useState({fname:"",lname:"",email:"",licence:"",state:"",practice:"",pw:""});
-  const up = k => e => setF(p=>({...p,[k]:e.target.value}));
-  const [err, setErr] = useState("");
-  const submit = () => {
-    if (!f.fname||!f.email||!f.pw){setErr("Please fill in your name, email and password.");return;}
-    setUser({name:`Dr. ${f.fname} ${f.lname}`.trim(),email:f.email,practice:f.practice,country});
-    setPage("app");
-  };
-  return (
-    <div style={{minHeight:"100vh",background:G.ow,fontFamily:"system-ui"}}>
-      <style>{`@keyframes mp{0%,100%{opacity:1}50%{opacity:0.3}}`}</style>
-      <div style={{background:G.gd,padding:"18px 20px 24px",color:"white"}}>
-        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:16}}>
-          <span onClick={()=>setPage("land")} style={{fontSize:13,color:"rgba(255,255,255,0.8)",cursor:"pointer"}}>Back</span>
-          <span style={{fontFamily:"Georgia,serif",fontSize:16,fontWeight:700}}>MedLetter</span>
-          <span style={{width:40}}/>
-        </div>
-        <div style={{textAlign:"center"}}>
-          <div style={{fontFamily:"Georgia,serif",fontSize:22,fontWeight:700,marginBottom:4}}>Start your free trial</div>
-          <div style={{fontSize:13,color:"rgba(255,255,255,0.75)",marginBottom:14}}>15 days free · No credit card required</div>
-          <div style={{display:"flex",gap:8,justifyContent:"center",flexWrap:"wrap"}}>
-            {["All letter types included","Voice dictation","Cancel anytime"].map(b=>(
-              <span key={b} style={{background:"rgba(255,255,255,0.12)",border:"1px solid rgba(255,255,255,0.2)",borderRadius:20,padding:"4px 12px",fontSize:12}}>{b}</span>
-            ))}
-          </div>
-        </div>
-      </div>
-      <div style={{maxWidth:460,margin:"0 auto",padding:"20px 16px 60px"}}>
-        <div style={{background:G.wh,border:`1.5px solid ${G.gbr}`,borderRadius:12,padding:"13px 16px",marginBottom:14,display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:10}}>
-          <div><div style={{fontSize:13,fontWeight:600,color:G.tm}}>I am a doctor in</div><div style={{fontSize:11,color:G.tmu}}>Sets your licence type and currency</div></div>
-          <CToggle country={country} setCountry={setCountry}/>
-        </div>
-        <div style={{background:G.gl,border:`1.5px solid ${G.gbr}`,borderRadius:10,padding:"11px 14px",fontSize:13,color:G.tm,display:"flex",gap:8,marginBottom:16,alignItems:"flex-start"}}>
-          Full access for 15 days. Choose a plan when your trial ends.
-        </div>
-        <div style={{display:"flex",flexDirection:"column",gap:13}}>
-          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12}}>
-            <Field id="sf" label="First Name" value={f.fname} onChange={up("fname")} placeholder="Sarah" voice={voice}/>
-            <Field id="sl" label="Last Name" value={f.lname} onChange={up("lname")} placeholder="Johnson" voice={voice}/>
-          </div>
-          <Field id="se" label="Email Address" type="email" value={f.email} onChange={up("email")} placeholder="dr.johnson@example.com" voice={voice}/>
-          <div style={{display:"flex",flexDirection:"column",gap:5}}>
-            <label style={lbl}>{C.licenceLabel}</label>
-            <input style={inp} placeholder={C.licencePlaceholder} value={f.licence} onChange={up("licence")}/>
-            <span style={{fontSize:11,color:G.tmu}}>{C.licenceHint}</span>
-          </div>
-          {country==="US" && (
-            <div style={{display:"flex",flexDirection:"column",gap:5}}>
-              <label style={lbl}>Licence State</label>
-              <select style={inp} value={f.state} onChange={up("state")}>
-                <option value="">Select state...</option>
-                {US_STATES.map(st=><option key={st}>{st}</option>)}
-              </select>
-            </div>
-          )}
-          <Field id="sp" label={country==="UK"?"Practice / Hospital":"Clinic / Hospital"} value={f.practice} onChange={up("practice")} placeholder={country==="UK"?"e.g. City Medical Centre":"e.g. Riverside Family Practice"} voice={voice}/>
-          <div style={{display:"flex",flexDirection:"column",gap:5}}>
-            <label style={lbl}>Password</label>
-            <input style={inp} type="password" placeholder="At least 8 characters" value={f.pw} onChange={up("pw")} onKeyDown={e=>e.key==="Enter"&&submit()}/>
-          </div>
-          {err && <div style={{padding:"10px 13px",background:"#fff5f5",border:`1.5px solid #fca5a5`,borderRadius:8,color:G.red,fontSize:13}}>{err}</div>}
-          <button onClick={submit} style={{...btnG("lg"),width:"100%",justifyContent:"center",borderRadius:12}}>Start 15-day free trial</button>
-          <p style={{fontSize:11,color:G.tmu,textAlign:"center",lineHeight:1.5,margin:0}}>By signing up you agree to our Terms of Service and Privacy Policy.</p>
-        </div>
-        <div style={{textAlign:"center",fontSize:13,color:G.tmu,marginTop:20,paddingTop:20,borderTop:`1px solid ${G.brd}`}}>
-          Already have an account? <span onClick={()=>setPage("login")} style={{color:G.gd,fontWeight:600,cursor:"pointer"}}>Log in</span>
-        </div>
-        <div style={{marginTop:24,background:G.wh,border:`1.5px solid ${G.brd}`,borderRadius:14,padding:18}}>
-          <div style={{display:"flex",gap:2,color:G.gb,marginBottom:10}}>{[1,2,3,4,5].map(i=><span key={i}>{Icon.star}</span>)}</div>
-          <div style={{fontSize:13,color:G.tm,fontStyle:"italic",lineHeight:1.65,marginBottom:12}}>{COUNTRY[country].testimonials[0].q}</div>
-          <div style={{fontSize:12,fontWeight:600,color:G.td}}>{COUNTRY[country].testimonials[0].name}</div>
-          <div style={{fontSize:11,color:G.tmu}}>{COUNTRY[country].testimonials[0].role}</div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// Login
-function Login({ setPage, setUser, country, setCountry }) {
-  const [email,setEmail]=useState(""); const [pw,setPw]=useState("");
-  const submit=()=>{if(!email||!pw)return;setUser({name:"Dr. Johnson",email,country});setPage("app");};
-  return (
-    <div style={{minHeight:"100vh",background:G.ow,fontFamily:"system-ui"}}>
-      <div style={{background:G.gd,padding:"18px 20px 26px",color:"white",textAlign:"center"}}>
-        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:14}}>
-          <span onClick={()=>setPage("land")} style={{fontSize:13,color:"rgba(255,255,255,0.8)",cursor:"pointer"}}>Back</span>
-          <span style={{fontFamily:"Georgia,serif",fontSize:16,fontWeight:700}}>MedLetter</span>
-          <span style={{width:40}}/>
-        </div>
-        <div style={{fontFamily:"Georgia,serif",fontSize:22,fontWeight:700,marginBottom:4}}>Welcome back</div>
-        <div style={{fontSize:13,color:"rgba(255,255,255,0.75)"}}>Log in to your MedLetter account</div>
-      </div>
-      <div style={{maxWidth:420,margin:"0 auto",padding:"22px 16px 60px"}}>
-        <div style={{background:G.wh,border:`1.5px solid ${G.gbr}`,borderRadius:12,padding:"12px 16px",marginBottom:16,display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:10}}>
-          <span style={{fontSize:13,color:G.tm,fontWeight:500}}>Your country</span>
-          <CToggle country={country} setCountry={setCountry}/>
-        </div>
-        <div style={{display:"flex",flexDirection:"column",gap:13}}>
-          <div style={{display:"flex",flexDirection:"column",gap:5}}><label style={lbl}>Email address</label><input style={inp} type="email" placeholder="dr.smith@example.com" value={email} onChange={e=>setEmail(e.target.value)}/></div>
-          <div style={{display:"flex",flexDirection:"column",gap:5}}><label style={lbl}>Password</label><input style={inp} type="password" placeholder="..." value={pw} onChange={e=>setPw(e.target.value)} onKeyDown={e=>e.key==="Enter"&&submit()}/></div>
-          <button onClick={submit} style={{...btnG("lg"),width:"100%",justifyContent:"center",borderRadius:12}}>Log in</button>
-          <div style={{display:"flex",alignItems:"center",gap:12,fontSize:12,color:G.tmu}}><div style={{flex:1,height:1,background:G.brd}}/><span>or</span><div style={{flex:1,height:1,background:G.brd}}/></div>
-          <button onClick={()=>setPage("signup")} style={{...btnO("lg"),width:"100%",justifyContent:"center",borderRadius:12}}>Create a free account</button>
-        </div>
-        <div style={{textAlign:"center",fontSize:13,color:G.tmu,marginTop:16}}>No account? <span onClick={()=>setPage("signup")} style={{color:G.gd,fontWeight:600,cursor:"pointer"}}>Sign up free — 15 day trial</span></div>
-      </div>
-    </div>
-  );
-}
-
-// Landing
-function Landing({ setPage, country, setCountry }) {
-  const C = COUNTRY[country];
-  const features = [
-    {icon:Icon.speed, title:"Instant generation", desc:"Complete professional letters in under 10 seconds."},
-    {icon:Icon.mic,   title:"Voice dictation",     desc:"Speak your clinical notes hands-free on any device."},
-    {icon:Icon.mail,  title:"Email to secretary",  desc:"Send directly to your team for filing or forwarding."},
-    {icon:Icon.dl,    title:"Download and print",  desc:"Save as text, print directly, or copy to your EHR."},
-    {icon:Icon.globe, title:"UK and US formats",   desc:"Correct conventions, terminology and formats for both markets."},
-    {icon:Icon.hist,  title:"Letter history",      desc:"Access and reuse previously generated letters anytime."},
-  ];
-  return (
-    <div style={{fontFamily:"system-ui,sans-serif"}}>
-      <div style={{background:G.wh,borderBottom:`1.5px solid ${G.brd}`,padding:"0 20px",height:58,display:"flex",alignItems:"center",justifyContent:"space-between",position:"sticky",top:0,zIndex:100,boxShadow:`0 2px 10px ${G.shd}`}}>
-        <LogoFull onClick={()=>setPage("land")}/>
-        <div style={{display:"flex",gap:8,alignItems:"center"}}>
-          <button style={btnO("sm")} onClick={()=>setPage("login")}>Log in</button>
-          <button style={btnG("sm")} onClick={()=>setPage("signup")}>Start free trial</button>
-        </div>
-      </div>
-
-      {/* Hero */}
-      <div style={{background:"linear-gradient(160deg,#0a2e18,#1a6b3c 50%,#1f8f52)",padding:"64px 20px 56px",textAlign:"center",color:"white"}}>
-        <div style={{maxWidth:660,margin:"0 auto"}}>
-          <div style={{display:"flex",justifyContent:"center",marginBottom:22}}>
-            <div style={{background:"rgba(255,255,255,0.1)",border:"1px solid rgba(255,255,255,0.2)",borderRadius:28,padding:4,display:"flex",gap:2}}>
-              {["UK","US"].map(c=>(
-                <button key={c} onClick={()=>setCountry(c)} style={{padding:"8px 20px",borderRadius:24,border:"none",cursor:"pointer",fontSize:13,fontWeight:600,background:country===c?"white":"transparent",color:country===c?G.gd:"rgba(255,255,255,0.75)",transition:"all 0.18s",display:"flex",alignItems:"center",gap:6}}>
-                  <FlagBadge code={COUNTRY[c].flag}/> {c}
-                </button>
-              ))}
-            </div>
-          </div>
-          <h1 style={{fontFamily:"Georgia,serif",fontSize:44,fontWeight:700,lineHeight:1.15,marginBottom:16,letterSpacing:-1}}>
-            Stop writing letters.<br/>Start treating patients.
-          </h1>
-          <p style={{fontSize:17,color:"rgba(255,255,255,0.75)",lineHeight:1.65,marginBottom:28,maxWidth:500,margin:"0 auto 28px"}}>
-            {country==="UK"?"AI-generated sick notes, referrals, insurance letters and more — ready in seconds.":"AI-generated prior auths, FMLA letters, referrals and more — ready in seconds."}
-          </p>
-          <div style={{display:"flex",gap:12,justifyContent:"center",flexWrap:"wrap",marginBottom:32}}>
-            <button onClick={()=>setPage("signup")} style={{padding:"15px 28px",background:"white",color:G.gd,border:"none",borderRadius:10,fontSize:15,fontWeight:700,cursor:"pointer"}}>Start 15-day free trial</button>
-            <button onClick={()=>setPage("app")} style={{padding:"15px 28px",background:"rgba(255,255,255,0.1)",color:"white",border:"1.5px solid rgba(255,255,255,0.3)",borderRadius:10,fontSize:15,fontWeight:600,cursor:"pointer"}}>See a demonstration</button>
-          </div>
-          <div style={{display:"flex",gap:24,justifyContent:"center",flexWrap:"wrap",borderTop:"1px solid rgba(255,255,255,0.15)",paddingTop:24}}>
-            {[["45 min","Saved daily"],["6","Letter types"],["Under 10s","Per letter"],["Voice","Dictation"],["UK & US","Supported"]].map(([n,l])=>(
-              <div key={n} style={{textAlign:"center"}}><div style={{fontFamily:"Georgia,serif",fontSize:20,fontWeight:700}}>{n}</div><div style={{fontSize:11,color:"rgba(255,255,255,0.6)",marginTop:2}}>{l}</div></div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      <div style={{background:G.gd,padding:"10px 20px",textAlign:"center",fontSize:12,color:"rgba(255,255,255,0.8)"}}>
-        {country==="UK"?"United Kingdom — GDPR Compliant · ICO Registered · Built for GPs and Specialists":"United States — HIPAA-Conscious · No PHI Stored · Built for Physicians, NPs and PAs"}
-      </div>
-
-      {/* Features */}
-      <div style={{maxWidth:900,margin:"0 auto",padding:"52px 20px"}}>
-        <h2 style={{fontFamily:"Georgia,serif",fontSize:28,fontWeight:700,color:G.td,textAlign:"center",marginBottom:32}}>Built for how doctors actually work</h2>
-        <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:16}}>
-          {features.map(f=>(
-            <div key={f.title} style={{background:G.wh,border:`1.5px solid ${G.brd}`,borderRadius:12,padding:20}}>
-              <div style={{width:36,height:36,borderRadius:8,background:G.gl,display:"grid",placeItems:"center",marginBottom:12,color:G.gd}}>{f.icon}</div>
-              <div style={{fontSize:13,fontWeight:600,color:G.td,marginBottom:6}}>{f.title}</div>
-              <div style={{fontSize:12,color:G.tmu,lineHeight:1.5}}>{f.desc}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Letter types */}
-      <div style={{background:G.gl,padding:"48px 20px"}}>
-        <div style={{maxWidth:900,margin:"0 auto"}}>
-          <h2 style={{fontFamily:"Georgia,serif",fontSize:26,fontWeight:700,color:G.td,textAlign:"center",marginBottom:24}}>
-            {country==="UK"?"Letter types for UK doctors":"Letter types for US physicians"}
-          </h2>
-          <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:12}}>
-            {C.letterTypes.map(t=>(
-              <div key={t.id} onClick={()=>setPage("app")} style={{background:G.wh,border:`1.5px solid ${G.brd}`,borderRadius:12,padding:18,cursor:"pointer"}}>
-                <div style={{width:28,height:28,borderRadius:6,background:G.gl,display:"grid",placeItems:"center",marginBottom:10,fontSize:11,fontWeight:700,color:G.gm}}>{t.label}</div>
-                <div style={{fontSize:13,fontWeight:600,color:G.td,marginBottom:4}}>{t.name}</div>
-                <div style={{fontSize:12,color:G.tmu,lineHeight:1.45}}>{t.desc}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Testimonials */}
-      <div style={{maxWidth:900,margin:"0 auto",padding:"52px 20px"}}>
-        <h2 style={{fontFamily:"Georgia,serif",fontSize:26,fontWeight:700,color:G.td,textAlign:"center",marginBottom:28}}>What doctors say</h2>
-        <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:16}}>
-          {C.testimonials.map((t,i)=>(
-            <div key={i} style={{background:G.wh,border:`1.5px solid ${G.brd}`,borderRadius:14,padding:22}}>
-              <div style={{display:"flex",gap:2,color:G.gb,marginBottom:12}}>{[1,2,3,4,5].map(i=><span key={i}>{Icon.star}</span>)}</div>
-              <div style={{fontSize:13,color:G.tm,lineHeight:1.7,marginBottom:14,fontStyle:"italic"}}>{t.q}</div>
-              <div style={{fontSize:12,fontWeight:600,color:G.td}}>{t.name}</div>
-              <div style={{fontSize:11,color:G.tmu}}>{t.role}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Pricing */}
-      <div style={{background:G.gl,padding:"52px 20px"}} id="pricing">
-        <div style={{maxWidth:900,margin:"0 auto"}}>
-          <h2 style={{fontFamily:"Georgia,serif",fontSize:26,fontWeight:700,color:G.td,textAlign:"center",marginBottom:8}}>Straightforward pricing</h2>
-          <p style={{textAlign:"center",color:G.tmu,fontSize:14,marginBottom:14}}>15-day free trial · No credit card · Cancel anytime</p>
-          <div style={{display:"flex",justifyContent:"center",marginBottom:20}}>
-            <div style={{display:"flex",background:G.gd,borderRadius:24,padding:3,gap:2}}>
-              {["UK","US"].map(c=>(
-                <button key={c} onClick={()=>setCountry(c)} style={{padding:"6px 16px",borderRadius:20,border:"none",cursor:"pointer",fontSize:12,fontWeight:600,background:country===c?"white":"transparent",color:country===c?G.gd:"rgba(255,255,255,0.75)",display:"flex",alignItems:"center",gap:5}}>
-                  <FlagBadge code={COUNTRY[c].flag}/> {COUNTRY[c].currency} {c}
-                </button>
-              ))}
-            </div>
-          </div>
-          <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:16}}>
-            {["Starter","Pro","Practice"].map(name=>{
-              const feats={Starter:["50 letters per month","All letter types","Voice dictation","Download and print","Email to secretary","Practice details pre-fill"],Pro:["Unlimited letters","All letter types","Voice dictation","Download and print","Email to secretary","Practice details pre-fill","Letter history","Up to 3 doctor profiles"],Practice:["Unlimited letters","All letter types","Voice dictation","Download and print","Email to secretary","Practice details pre-fill","Full letter history","Unlimited doctor profiles","Priority support"]};
-              const no={Starter:["Letter history","Multiple profiles"],Pro:[],Practice:[]};
-              return(
-                <div key={name} style={{background:G.wh,border:`2px solid ${name==="Pro"?G.gd:G.brd}`,borderRadius:16,padding:"22px 18px",display:"flex",flexDirection:"column",position:"relative",boxShadow:name==="Pro"?`0 0 0 4px rgba(26,107,60,0.08)`:"none"}}>
-                  {name==="Pro"&&<div style={{position:"absolute",top:-12,left:"50%",transform:"translateX(-50%)",background:G.gd,color:"white",borderRadius:20,padding:"3px 14px",fontSize:11,fontWeight:700,whiteSpace:"nowrap"}}>Most Popular</div>}
-                  <div style={{fontSize:12,fontWeight:700,color:G.tmu,textTransform:"uppercase",letterSpacing:1,marginBottom:6}}>{name}</div>
-                  <div style={{fontFamily:"Georgia,serif",fontSize:36,fontWeight:700,color:G.td,lineHeight:1,marginBottom:4}}>
-                    <sup style={{fontSize:16,verticalAlign:"top",marginTop:6,fontFamily:"system-ui"}}>{COUNTRY[country].currency}</sup>{COUNTRY[country].prices[name]}<span style={{fontSize:13,color:G.tmu,fontFamily:"system-ui",fontWeight:400}}>/mo</span>
-                  </div>
-                  <ul style={{listStyle:"none",display:"flex",flexDirection:"column",gap:7,marginBottom:18,flex:1,marginTop:12}}>
-                    {feats[name].map(f=><li key={f} style={{fontSize:12,color:G.tm,display:"flex",gap:7,alignItems:"flex-start"}}><span style={{color:G.gb,fontWeight:700,flexShrink:0,marginTop:1}}>{Icon.check}</span>{f}</li>)}
-                    {no[name].map(f=><li key={f} style={{fontSize:12,color:G.tmu,display:"flex",gap:7}}><span style={{flexShrink:0}}>—</span>{f}</li>)}
-                  </ul>
-                  <button onClick={()=>setPage("signup")} style={{padding:11,borderRadius:10,fontFamily:"system-ui",fontSize:13,fontWeight:600,cursor:"pointer",border:name==="Pro"?"none":`2px solid ${G.gbr}`,background:name==="Pro"?G.gd:G.wh,color:name==="Pro"?"white":G.gd,width:"100%"}}>
-                    Start free trial
-                  </button>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </div>
-
-      {/* CTA */}
-      <div style={{background:G.gd,padding:"56px 20px",textAlign:"center",color:"white"}}>
-        <h2 style={{fontFamily:"Georgia,serif",fontSize:30,fontWeight:700,marginBottom:12}}>Ready to save an hour every day?</h2>
-        <p style={{fontSize:15,color:"rgba(255,255,255,0.75)",marginBottom:24}}>Free for 15 days. No credit card required.</p>
-        <button onClick={()=>setPage("signup")} style={{padding:"14px 28px",background:"white",color:G.gd,border:"none",borderRadius:10,fontSize:15,fontWeight:700,cursor:"pointer"}}>Start your free trial</button>
-      </div>
-
-      <div style={{background:G.td,padding:"22px 20px",display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:12}}>
-        <span style={{fontFamily:"Georgia,serif",fontSize:15,fontWeight:700,color:"white"}}>MedLetter</span>
-        <div style={{display:"flex",gap:16,flexWrap:"wrap"}}>
-          {["Log in","Sign up","Privacy","Terms"].map(l=><span key={l} style={{fontSize:12,color:"rgba(255,255,255,0.5)",cursor:"pointer"}}>{l}</span>)}
-        </div>
-        <div style={{fontSize:11,color:"rgba(255,255,255,0.3)",width:"100%"}}>2026 MedLetter · medletter.ai · {country==="UK"?"GDPR Compliant":"HIPAA-Conscious, no PHI stored"}</div>
-      </div>
-    </div>
-  );
-}
-
-// Root
-export default function MedLetter() {
-  const [page, setPage] = useState("land");
-  const [user, setUser] = useState(null);
-  const [country, setCountry] = useState("UK");
-  const [history, setHistory] = useState([]);
-  const [loadedLetter, setLoadedLetter] = useState(null);
-
-  const go = useCallback(p => { setPage(p); window.scrollTo(0,0); }, []);
-  const setU = useCallback(u => setUser(u), []);
-  const setC = useCallback(c => setCountry(c), []);
-  const addToHistory = useCallback(item => setHistory(h => [item, ...h.slice(0,19)]), []);
-  const loadLetter = useCallback(item => setLoadedLetter(item), []);
-
-  if (page === "land")    return <Landing    setPage={go} country={country} setCountry={setC} />;
-  if (page === "login")   return <Login      setPage={go} setUser={setU} country={country} setCountry={setC} />;
-  if (page === "signup")  return <Signup     setPage={go} setUser={setU} country={country} setCountry={setC} />;
-  if (page === "app")     return <AppPage    setPage={go} user={user} country={country} history={history} addToHistory={addToHistory} loadedLetter={loadedLetter} />;
-  if (page === "history") return <HistoryPage setPage={go} history={history} onLoad={loadLetter} />;
-  return <Landing setPage={go} country={country} setCountry={setC} />;
-}
-
-    const root = ReactDOM.createRoot(document.getElementById('root'));
-    root.render(React.createElement(MedLetter));
-  </script>
+// Init
+document.addEventListener('DOMContentLoaded',()=>{ST.forEach(s=>{const o=document.createElement('option');o.value=o.textContent=s;document.getElementById('su-st').appendChild(o);});renderHist();});
+</script>
 </body>
 </html>
