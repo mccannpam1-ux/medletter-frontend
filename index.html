@@ -189,8 +189,18 @@ footer{background:var(--navy);padding:28px 24px;display:flex;align-items:center;
 .wd{width:10px;height:10px;border-radius:50%}
 .w1{background:rgba(255,255,255,0.15)}.w2{background:rgba(255,255,255,0.3)}.w3{background:rgba(255,255,255,0.5)}
 .lfile{margin-left:7px;font-size:12px;color:rgba(255,255,255,0.65);font-weight:600}
-.lbody{padding:32px 36px;min-height:120px}
-.ltxt{font-size:14.5px;line-height:1.95;color:var(--navy);white-space:pre-wrap;font-weight:500}
+.lbody{padding:44px 52px;min-height:200px;background:#fff}
+.ltxt{font-family:'Courier New',Courier,monospace;font-size:13px;line-height:1.95;color:#1a1a1a;white-space:pre-wrap;font-weight:400}
+
+/* MIC BUTTON */
+.field-wrap{position:relative}
+.mic-btn{position:absolute;right:10px;bottom:10px;width:34px;height:34px;border-radius:50%;border:none;cursor:pointer;display:grid;place-items:center;transition:all .18s;background:var(--gbtn);box-shadow:0 2px 8px rgba(10,77,110,0.3);z-index:2}
+.mic-btn:hover{transform:scale(1.08);box-shadow:0 4px 14px rgba(10,77,110,0.45)}
+.mic-btn.rec{background:linear-gradient(135deg,#c0392b,#e74c3c);animation:prec 1s infinite}
+@keyframes prec{0%,100%{box-shadow:0 0 0 0 rgba(192,57,43,0.4)}50%{box-shadow:0 0 0 8px rgba(192,57,43,0)}}
+.mic-status{font-size:11px;color:var(--t3);margin-top:4px;font-weight:500;min-height:15px}
+.mic-status.active{color:#c0392b;font-weight:700}
+
 .disc{margin-top:14px;padding:13px 16px;background:linear-gradient(135deg,rgba(10,77,110,0.05),rgba(26,143,74,0.05));border:1px solid var(--brd);border-radius:12px;font-size:12px;color:var(--t2);line-height:1.6;font-weight:500}
 .rcheck{margin-top:12px;padding:13px 15px;background:var(--sf);border:1.5px solid var(--brd2);border-radius:13px;display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--navy);cursor:pointer;transition:all .2s;font-weight:500}
 .rcheck.on{background:linear-gradient(135deg,rgba(10,77,110,0.06),rgba(26,143,74,0.06));border-color:var(--teal)}
@@ -229,7 +239,7 @@ footer{background:var(--navy);padding:28px 24px;display:flex;align-items:center;
     </a>
     <div style="display:flex;gap:10px;align-items:center">
       <button class="btn btn-ghost" onclick="go('pg-login')">Log in</button>
-      <button class="btn btn-g" onclick="scrollTo('pricing')">Get access</button>
+      <button class="btn btn-g" onclick="window.open('https://buy.stripe.com/dRmbJ1aY8gAo4B66r54ko01','_blank')">Get access</button>
     </div>
   </nav>
 
@@ -242,8 +252,8 @@ footer{background:var(--navy);padding:28px 24px;display:flex;align-items:center;
       <h1>Stop writing letters.<br><em>Start treating patients.</em></h1>
       <p id="hero-p">AI-generated sick notes, referrals, insurance letters and more — professionally formatted in seconds.</p>
       <div class="hbtns">
-        <button class="hbtn hw" onclick="scrollTo('pricing')">Get access — $249/yr</button>
-        <button class="hbtn hg" onclick="demoApp()">See it in action</button>
+        <button class="hbtn hw" onclick="window.open('https://buy.stripe.com/dRmbJ1aY8gAo4B66r54ko01','_blank')">Get access — $249/yr</button>
+        <button class="hbtn hg" onclick="go('pg-login')">Log in</button>
       </div>
       <div class="stats">
         <div><div class="sn">45 min</div><div class="sl">Saved daily</div></div>
@@ -290,12 +300,12 @@ footer{background:var(--navy);padding:28px 24px;display:flex;align-items:center;
       <div class="stag">Everything included</div>
       <h2 id="types-h">6 letter types — all included</h2>
       <div class="g3" id="types-g">
-        <div class="card" onclick="demoApp()" style="cursor:pointer"><h3>Sick Note</h3><p>Absence certificate for employer or school</p></div>
-        <div class="card" onclick="demoApp()" style="cursor:pointer"><h3>Specialist Referral</h3><p>Refer patient with full clinical context</p></div>
-        <div class="card" onclick="demoApp()" style="cursor:pointer"><h3>Fitness to Work</h3><p>Return-to-work or fitness certificate</p></div>
-        <div class="card" onclick="demoApp()" style="cursor:pointer"><h3>Insurance Letter</h3><p>Medical report for insurance claim</p></div>
-        <div class="card" onclick="demoApp()" style="cursor:pointer"><h3>Medication Letter</h3><p>Patient-friendly medication explanation</p></div>
-        <div class="card" onclick="demoApp()" style="cursor:pointer"><h3>Custom Letter</h3><p>Council, legal, housing and more</p></div>
+        <div class="card"><h3>Sick Note</h3><p>Absence certificate for employer or school</p></div>
+        <div class="card"><h3>Specialist Referral</h3><p>Refer patient with full clinical context</p></div>
+        <div class="card"><h3>Fitness to Work</h3><p>Return-to-work or fitness certificate</p></div>
+        <div class="card"><h3>Insurance Letter</h3><p>Medical report for insurance claim</p></div>
+        <div class="card"><h3>Medication Letter</h3><p>Patient-friendly medication explanation</p></div>
+        <div class="card"><h3>Custom Letter</h3><p>Council, legal, housing and more</p></div>
       </div>
     </div>
   </div>
@@ -352,7 +362,7 @@ footer{background:var(--navy);padding:28px 24px;display:flex;align-items:center;
     <div class="ctai">
       <h2>Save an hour every day.</h2>
       <p>One annual payment. Every letter type. Cancel any time.</p>
-      <button class="hbtn hw" onclick="scrollTo('pricing')">Get access — $249/yr</button>
+      <button class="hbtn hw" onclick="window.open('https://buy.stripe.com/dRmbJ1aY8gAo4B66r54ko01','_blank')">Get access — $249/yr</button>
     </div>
   </div>
 
@@ -448,11 +458,21 @@ footer{background:var(--navy);padding:28px 24px;display:flex;align-items:center;
         <div class="field"><label>Patient Full Name</label><input id="f-pat" placeholder="e.g. John Smith"></div>
         <div class="field"><label id="f-dob-l">Date of Birth</label><input id="f-dob" placeholder="e.g. 15/03/1980"></div>
         <div class="field"><label>Your Name</label><input id="f-doc" placeholder="Dr. Sarah Johnson"></div>
+        <div class="field"><label id="f-lic-lbl">GMC Number</label><input id="f-lic" placeholder="e.g. 7654321"></div>
         <div class="field"><label>Practice / Hospital</label><input id="f-pr" placeholder="City Medical Centre"></div>
+        <div class="field"><label>Phone Number</label><input id="f-phone" placeholder="0161 123 4567"></div>
+        <div class="field fw"><label>Practice Address</label><input id="f-addr" placeholder="123 High Street, Manchester M1 2AB"></div>
         <div class="field"><label>Addressed To</label><input id="f-rec" placeholder="To Whom It May Concern"></div>
         <div class="field"><label>Letter Date</label><input id="f-date"></div>
         <div class="field fw"><label>Clinical Notes</label>
-          <textarea id="f-notes" placeholder="e.g. Patient has acute lower back pain since 3 April. Unable to perform manual duties. Expected recovery 2–3 weeks."></textarea>
+          <div class="field-wrap">
+            <textarea id="f-notes" placeholder="e.g. low back pain, ibuprofen 600mg, 2 weeks off&#10;&#10;Or click the microphone and speak your notes..." style="padding-right:50px;min-height:110px"></textarea>
+            <button class="mic-btn" id="mic-btn" onclick="toggleMic()" title="Click to dictate your clinical notes">
+              <svg id="mic-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0014 0"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+              <svg id="stop-icon" width="12" height="12" viewBox="0 0 24 24" fill="white" style="display:none"><rect x="3" y="3" width="18" height="18" rx="3"/></svg>
+            </button>
+          </div>
+          <div class="mic-status" id="mic-status">Click the microphone to dictate your notes</div>
         </div>
         <div class="field fw" id="f-cw" style="display:none">
           <label>Describe What You Need</label>
@@ -531,9 +551,8 @@ const STRIPE_URL = 'https://buy.stripe.com/dRmbJ1aY8gAo4B66r54ko01';
 // ── APPROVED USERS — add each customer's email + password here ──
 // Format: { email: 'dr@example.com', password: 'Welcome2026', name: 'Dr. Smith', country: 'UK' }
 const USERS = [
-  { email: 'demo@medletter.app', password: 'Demo2026', name: 'Dr. Demo', country: 'UK' },
-  // Add new customers here after they purchase:
-  // { email: 'customer@nhs.net', password: 'Welcome2026', name: 'Dr. Jones', country: 'UK' },
+  // Add customers here after they purchase:
+  // { email: 'drjones@nhs.net', password: 'Welcome2026', name: 'Dr. Jones', country: 'UK', licence: '7654321', address: '123 High Street, Manchester M1 2AB', phone: '0161 123 4567' },
 ];
 
 const CC = {
@@ -567,12 +586,6 @@ function setPC(c){prC=c;ctry=c;document.getElementById('puk').classList.toggle('
 
 function buyNow(){window.open(STRIPE_URL,'_blank');}
 
-function demoApp(){
-  currentUser={name:'Dr. Demo',country:'UK'};ctry='UK';
-  document.getElementById('user-pill').textContent='Dr. Demo · Full Access';
-  go('pg-app');
-}
-
 function doLogin(){
   const em=document.getElementById('li-em').value.trim().toLowerCase();
   const pw=document.getElementById('li-pw').value.trim();
@@ -592,9 +605,18 @@ function initApp(){
   const d=document.getElementById('f-date');
   if(!d.value)d.value=new Date().toLocaleDateString(CC[ctry].dl,{day:'numeric',month:'long',year:'numeric'});
   document.getElementById('app-mode').textContent=CC[ctry].lbl+' Mode';
+  const licLbl=ctry==='UK'?'GMC Number':'NPI Number';
+  const licPh=ctry==='UK'?'e.g. 7654321':'10-digit NPI e.g. 1234567890';
+  document.getElementById('f-lic-lbl').textContent=licLbl;
+  document.getElementById('f-lic').placeholder=licPh;
+  document.getElementById('ap-lic-lbl').textContent=licLbl;
+  document.getElementById('ap-lic').placeholder=licPh;
   if(currentUser){
-    document.getElementById('f-doc').value=currentUser.name||'';
-    document.getElementById('ap-doc').value=currentUser.name||'';
+    if(currentUser.name){document.getElementById('f-doc').value=currentUser.name;document.getElementById('ap-doc').value=currentUser.name;}
+    if(currentUser.licence){document.getElementById('f-lic').value=currentUser.licence;document.getElementById('ap-lic').value=currentUser.licence;}
+    if(currentUser.address){document.getElementById('f-addr').value=currentUser.address;document.getElementById('ap-addr').value=currentUser.address;}
+    if(currentUser.phone){document.getElementById('f-phone').value=currentUser.phone;document.getElementById('ap-phone').value=currentUser.phone;}
+    if(currentUser.practice){document.getElementById('f-pr').value=currentUser.practice;document.getElementById('ap-pr').value=currentUser.practice;}
   }
 }
 
@@ -619,13 +641,196 @@ async function gen(){
   ltxt='';rev=false;document.getElementById('rcb').checked=false;document.getElementById('rchk').classList.remove('on');
   const eb=document.getElementById('emb');eb.disabled=true;eb.style.opacity='.4';eb.style.cursor='not-allowed';
   const C=CC[ctry];
-  const tones={formal:'formal and professional',concise:'concise and direct',detailed:'detailed and comprehensive',empathetic:'professional but warm and empathetic'};
-  const langs={medical:'Use appropriate medical terminology for a professional audience.',plain:'Use plain simple English. Avoid jargon.'};
-  const ctx=ctry==='UK'?'UK medical practice. Follow NHS/UK conventions, British spelling, date format DD Month YYYY.':'US medical practice. Follow US conventions, American spelling, reference FMLA/ADA/insurance where relevant.';
   const tn=C.tn[ltType]||'Medical Letter';
-  const prompt=`You are a senior medical secretary. Draft a complete ${tn} for a ${ctx}\nPatient: ${v('f-pat')||'[Patient Name]'}${v('f-dob')?` (DOB: ${v('f-dob')})`:''}\nAddressed to: ${v('f-rec')||'To Whom It May Concern'}\nDoctor: ${v('f-doc')||'The Treating Physician'}${v('f-pr')?`, ${v('f-pr')}`:''}\nDate: ${v('f-date')}\nClinical details: ${v('f-notes')||'[See clinical notes]'}${ltType==='custom'?`\nRequest: ${v('f-cust')}`:''}\nTone: ${tones[v('f-tone')||'formal']}\n${langs[v('f-lang')||'medical']}\nWrite ONLY the letter. Format: date, salutation, body paragraphs, professional closing, doctor name and credentials. Start with the date.`;
+  const licLabel=ctry==='UK'?'GMC No':'NPI';
+  const drName=v('f-doc')||'The Treating Physician';
+  const practice=v('f-pr')||'';
+  const address=v('f-addr')||'';
+  const phone=v('f-phone')||'';
+  const licence=v('f-lic')||'';
+  const patient=v('f-pat')||'[Patient Name]';
+  const dob=v('f-dob')||'';
+  const recipient=v('f-rec')||'To Whom It May Concern';
+  const letterDate=v('f-date')||new Date().toLocaleDateString();
+  const notes=v('f-notes')||'(No additional clinical notes provided — use your clinical expertise to produce a thorough, appropriate letter based on the letter type selected.)';
+  const tone=v('f-tone')||'formal';
+  const lang=v('f-lang')||'medical';
+  const isUK=ctry==='UK';
+
+  // ── Header block (doctor address at top of letter) ──
+  const headerBlock=[drName,practice,address,phone,licence?`${licLabel}: ${licence}`:''].filter(Boolean).join('\n');
+
+  // ── Per-tone instructions ──
+  const toneInstructions={
+    formal:`Write in a formal, authoritative and professional register. Use precise clinical terminology. Sentences should be measured and confident. Avoid contractions. The letter should convey the full weight of a senior clinician's professional opinion.`,
+    concise:`Write concisely and directly. Every sentence must earn its place. No filler phrases, no repetition. The letter should be shorter than average but lose nothing in clinical accuracy or professionalism. Get to the point immediately.`,
+    detailed:`Write a thorough, comprehensive letter. Include full clinical context, relevant history, current management plan, prognosis, and any recommendations in detail. This letter should leave the reader with a complete picture of the patient's condition and the doctor's clinical reasoning. Use two or three clinical body paragraphs as needed.`,
+    empathetic:`Write with warmth and compassion while remaining fully professional. Acknowledge the impact of the patient's condition on their daily life and wellbeing. The clinical content must remain precise, but the language should convey that the treating doctor genuinely cares about this patient's welfare.`
+  };
+
+  // ── Per-language instructions ──
+  const langInstructions={
+    medical:`Use appropriate medical and clinical terminology throughout. The audience is other healthcare professionals or formal institutions who understand clinical language.`,
+    plain:`Write in clear, plain English that a non-medical person can fully understand. Avoid jargon. Where a medical term is unavoidable, explain it briefly in parentheses. The letter should still sound professional but be accessible to patients and employers.`
+  };
+
+  // ── Per-letter-type specific instructions ──
+  const typeInstructions={
+    sick_note: isUK
+      ? `This is a UK Sick Note / Fit Note / Medical Certificate of Absence. Structure:
+- State clearly that the patient is unfit for work (or fit with adjustments if relevant)
+- Give the clinical reason — expand the doctor's notes into a full clinical description
+- State the recommended period of absence with specific dates if provided, or a clinical estimate
+- If relevant, mention any adjustments that could facilitate a return to work
+- Use NHS conventions. Avoid the phrase "period of absence as recommended by clinician assessment" — be specific and natural.`
+      : `This is a US Medical Leave Note / Doctor's Note. Structure:
+- Confirm the patient is under your care and is medically unable to perform their duties
+- Expand the clinical details into full professional language
+- State the expected duration of leave with dates if available
+- Reference ADA or FMLA accommodations if relevant
+- Use US medical conventions and American spelling.`,
+
+    referral: isUK
+      ? `This is a UK Specialist Referral Letter. Structure:
+- Opening: state why you are referring this patient and to which specialty
+- Patient background: relevant medical history, current medications, allergies if relevant
+- Presenting complaint: detailed description of symptoms, onset, duration, severity
+- Investigations already undertaken: results of any tests, imaging, bloods
+- Your clinical impression / working diagnosis
+- What you are specifically requesting from the specialist
+- Urgency level (routine / urgent / two-week wait if cancer suspected)
+- Close with availability for further discussion
+Follow NHS referral letter conventions exactly.`
+      : `This is a US Specialist Referral Letter. Structure:
+- Opening: state the referral purpose and specialty
+- Patient summary: relevant history, current medications, allergies
+- Clinical presentation: detailed symptoms, timeline, severity
+- Investigations completed and results
+- Your working diagnosis / clinical impression
+- Specific questions or requests for the specialist
+- Insurance and authorisation details if relevant
+- Close professionally with contact details
+Use US medical conventions.`,
+
+    fitness: isUK
+      ? `This is a UK Fitness to Work / Return to Work Certificate. Structure:
+- Confirm you have assessed the patient
+- State clearly: fit for work / not fit for work / fit for work with adjustments
+- If fit with adjustments: specify exactly what adjustments are needed (reduced hours, modified duties, no heavy lifting, etc.)
+- Clinical reason — expand the notes into professional language
+- Expected review date or duration of any restrictions
+- This must be a clear, actionable document an employer can act upon immediately.`
+      : `This is a US Return to Work / Fitness for Duty Letter. Structure:
+- Confirm the patient has been assessed and cleared (or not cleared) to return
+- State any work restrictions clearly and specifically
+- Give the clinical basis for any restrictions
+- Specify dates — when they can return and when restrictions are reviewed
+- ADA accommodation language if applicable
+- Must be employer-ready and legally appropriate.`,
+
+    insurance: isUK
+      ? `This is a UK Medical Report / Insurance Letter. Structure:
+- Confirm you are the treating physician and state your relationship to the patient
+- Diagnosis: full clinical description with appropriate medical terminology
+- Clinical history: onset, progression, current status
+- Treatment to date: medications, referrals, procedures
+- Prognosis: honest, clinical assessment of likely future trajectory
+- Impact on daily life and functioning if relevant
+- This letter may be used for insurance, legal, or benefit purposes — it must be thorough and defensible.`
+      : `This is a US Medical Report / Insurance Letter. Structure:
+- Physician-patient relationship and duration of care
+- Diagnosis with ICD codes if available
+- Clinical history and current status
+- Treatment plan and response to treatment
+- Functional limitations and prognosis
+- Any relevant MMI (Maximum Medical Improvement) status
+- Must meet insurance company requirements and be legally sound.`,
+
+    medication: `This is a Medication Explanation Letter — suitable for patients, employers, customs, travel, or schools. Structure:
+- Confirm the patient is prescribed the medication(s) listed
+- Explain what condition the medication is treating — in plain clinical terms
+- Explain why the medication is medically necessary
+- Dosage, frequency, and duration of treatment
+- Any relevant information the recipient needs (e.g. for travel: this is a legitimate prescription; for employer: this medication does not impair the patient's ability to work)
+- Keep this accessible — use plain language where possible without losing professionalism.`,
+
+    prior_auth: `This is a US Prior Authorization Request Letter. Structure:
+- Patient and insurance details
+- Medication or procedure being requested
+- Clinical justification: diagnosis, severity, why this specific treatment is medically necessary
+- Treatments already tried and why they were insufficient (step therapy documentation)
+- Evidence base: reference clinical guidelines or studies if relevant
+- Urgency if applicable
+- Must be compelling and clinically thorough — prior auth denials are often overturned with strong letters.`,
+
+    fmla: `This is a US FMLA (Family and Medical Leave Act) Certification Letter. Structure:
+- Confirm the serious health condition that qualifies under FMLA
+- State whether this is continuous, intermittent, or reduced schedule leave
+- Expected duration and dates
+- Clinical basis — expand the doctor's notes into full medical language
+- Functional limitations that necessitate the leave
+- Expected treatment schedule if intermittent leave
+- Must comply with FMLA regulatory requirements and be defensible if reviewed.`,
+
+    custom: `This is a custom medical letter as specified by the doctor. Read the request carefully and produce exactly the letter needed. Apply the same standards of clinical professionalism, proper formatting, and full expansion of any brief notes as with all other letter types. The content, purpose, and recipient should drive the structure — ensure it is fit for purpose.`
+  };
+
+  const letterTypeGuidance = typeInstructions[ltType] || typeInstructions.custom;
+
+  const prompt=`You are a highly experienced ${isUK?'NHS GP and medical letter specialist':'US board-certified physician and medical correspondence specialist'}. You write letters that are immediately recognisable as the work of a senior, confident clinician. No matter how brief the clinical notes provided, you always produce a full, rich, professional letter.
+
+═══════════════════════════════════
+LETTER TYPE: ${tn}
+TONE: ${toneInstructions[tone]}
+LANGUAGE REGISTER: ${langInstructions[lang]}
+CONVENTIONS: ${isUK?'UK/NHS — British spelling, DD Month YYYY dates, GMC conventions':'US — American spelling, Month DD YYYY dates, US medical conventions'}
+═══════════════════════════════════
+
+DOCTOR DETAILS:
+${headerBlock}
+
+PATIENT: ${patient}${dob?' (Date of Birth: '+dob+')':''}
+DATE: ${letterDate}
+ADDRESSED TO: ${recipient}
+
+CLINICAL NOTES FROM DOCTOR:
+${notes}${ltType==='custom'?'\n\nDOCTOR\'S SPECIFIC REQUEST: '+v('f-cust'):''}
+
+═══════════════════════════════════
+LETTER-TYPE SPECIFIC REQUIREMENTS:
+${letterTypeGuidance}
+═══════════════════════════════════
+
+ABSOLUTE RULES — never break these:
+1. OUTPUT ONLY THE LETTER. No explanation, no preamble, no "Here is your letter:" — just the letter itself starting with the header.
+2. ALWAYS expand brief clinical notes into rich, professional language. If the doctor writes "knee pain, physio" — you write a full paragraph about the presenting musculoskeletal complaint and the physiotherapy management plan. If they write "depression, sertraline 50mg" — you write about the patient's mood disorder, the commenced pharmacological treatment, and the clinical rationale.
+3. NEVER use hollow filler phrases: "period of absence as recommended by clinician assessment", "as per clinical evaluation", "it is hereby certified". Write like a human doctor, not a form.
+4. The letter must look exactly like a headed medical letter — starting with the doctor's details at the top, then date, then recipient, then RE: line, then body, then sign-off.
+5. Sign off with the doctor's full name, appropriate title, licence number, and practice. Do not add placeholder brackets — if information is missing, omit that line gracefully.
+
+FORMAT — reproduce exactly:
+${headerBlock}
+
+${letterDate}
+
+${recipient},
+
+RE: ${patient}${dob?' (DOB: '+dob+')':''}
+
+[Professional opening paragraph stating purpose]
+
+[Clinical body — full expansion of the doctor's notes. Rich, specific, professional. For 'detailed' tone use 2-3 paragraphs. For 'concise' tone keep to 1 tight paragraph.]
+
+[Professional closing — action, recommendation, availability]
+
+Yours sincerely,
+
+
+${drName}
+[Doctor's title — e.g. General Practitioner / Consultant Rheumatologist / Family Medicine Physician]${licence?'\n'+licLabel+': '+licence:''}${practice?'\n'+practice:''}`;
+
   try{
-    const res=await fetch(RAILWAY,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:1024,messages:[{role:'user',content:prompt}]})});
+    const res=await fetch(RAILWAY,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:2000,messages:[{role:'user',content:prompt}]})});
     const data=await res.json();
     if(!res.ok)throw new Error(data?.error?.message||`Error ${res.status}`);
     const txt=(data.content||[]).filter(b=>b.type==='text').map(b=>b.text).join('').trim();
@@ -641,7 +846,6 @@ async function gen(){
   }catch(e){err.textContent=e.message;err.classList.add('on');}
   finally{btn.disabled=false;sp.style.display='none';lbl.textContent='Generate Letter';}
 }
-
 function togRev(){rev=!rev;document.getElementById('rcb').checked=rev;document.getElementById('rchk').classList.toggle('on',rev);const eb=document.getElementById('emb');eb.disabled=!rev;eb.style.opacity=rev?'1':'.4';eb.style.cursor=rev?'pointer':'not-allowed';}
 function cpyL(){if(!ltxt)return;navigator.clipboard.writeText(ltxt).then(()=>{const b=document.getElementById('copybtn');b.textContent='Copied!';setTimeout(()=>b.textContent='Copy',2000);});}
 function dlL(){if(!ltxt)return;const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([ltxt],{type:'text/plain'}));a.download=`MedLetter-${Date.now()}.txt`;a.click();}
@@ -649,6 +853,53 @@ function sendEmail(){const to=document.getElementById('em-to').value.trim();if(!
 function renderHist(){const l=document.getElementById('hist-list'),c=document.getElementById('hcnt');c.textContent=hist.length?`(${hist.length})`:'';if(!hist.length){l.innerHTML='<div class="hemp">No letters yet.</div>';return;}l.innerHTML=hist.map(h=>`<div class="hitem"><div><div class="hitn">${h.type}</div><div class="hisu">${h.patient} · ${h.date}</div></div><button class="btn btn-ghost" style="padding:5px 12px;font-size:11px" onclick="loadH(${h.id})">View</button></div>`).join('');}
 function loadH(id){const item=hist.find(h=>h.id===id);if(!item)return;ltxt=item.text;document.getElementById('ltxt').textContent=item.text;document.getElementById('lfname').textContent=item.type;document.getElementById('outwrap').classList.add('on');tog('p-hist');document.getElementById('outwrap').scrollIntoView({behavior:'smooth'});}
 document.addEventListener('DOMContentLoaded',()=>{renderHist();});
+// ── VOICE DICTATION ──
+let recog=null,isRec=false;
+function toggleMic(){
+  if(!('webkitSpeechRecognition' in window)&&!('SpeechRecognition' in window)){
+    alert('Voice dictation requires Chrome or Safari.');return;
+  }
+  isRec?stopMic():startMic();
+}
+function startMic(){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  recog=new SR();recog.continuous=true;recog.interimResults=true;
+  recog.lang=ctry==='UK'?'en-GB':'en-US';
+  let final=document.getElementById('f-notes').value;
+  if(final&&!final.endsWith(' '))final+=' ';
+  recog.onstart=()=>{
+    isRec=true;
+    document.getElementById('mic-btn').classList.add('rec');
+    document.getElementById('mic-icon').style.display='none';
+    document.getElementById('stop-icon').style.display='block';
+    const ms=document.getElementById('mic-status');
+    ms.textContent='Listening — speak your clinical notes...';ms.classList.add('active');
+  };
+  recog.onresult=(e)=>{
+    let interim='';
+    for(let i=e.resultIndex;i<e.results.length;i++){
+      if(e.results[i].isFinal)final+=e.results[i][0].transcript+' ';
+      else interim+=e.results[i][0].transcript;
+    }
+    document.getElementById('f-notes').value=final+interim;
+  };
+  recog.onend=()=>{document.getElementById('f-notes').value=final.trim();stopMic();};
+  recog.onerror=(e)=>{
+    document.getElementById('mic-status').textContent='Mic error: '+e.error+'. Please try again.';
+    document.getElementById('mic-status').classList.remove('active');
+    stopMic();
+  };
+  recog.start();
+}
+function stopMic(){
+  if(recog)recog.stop();isRec=false;
+  document.getElementById('mic-btn').classList.remove('rec');
+  document.getElementById('mic-icon').style.display='block';
+  document.getElementById('stop-icon').style.display='none';
+  const ms=document.getElementById('mic-status');
+  ms.textContent='Click the microphone to dictate your notes';ms.classList.remove('active');
+}
+
 </script>
 </body>
 </html>
