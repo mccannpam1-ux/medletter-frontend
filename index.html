@@ -4,401 +4,479 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>MedLetter — AI Medical Letter Generator</title>
-<link href="https://fonts.googleapis.com/css2?family=Lora:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Inter',sans-serif;background:#f9fdfb;color:#0f2d1c}
-:root{--gd:#1a6b3c;--gm:#1f8f52;--gb:#25b86e;--gl:#e8f7ef;--gbr:#c3e8d5;--brd:#ddf0e6;--tmu:#7aaa8a;--shd:rgba(26,107,60,0.10)}
+body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:#f0f4f8;color:#0d1b2e;min-height:100vh}
+:root{
+  --navy:#0d1b2e;--navy2:#0f2a4a;--teal:#0a7a8c;--green:#1a8f4a;--mint:#4dd8a0;
+  --grad:linear-gradient(135deg,#0d1b2e 0%,#0a4d6e 40%,#0f7a5c 75%,#1a8f4a 100%);
+  --gbtn:linear-gradient(135deg,#0a4d6e,#0f7a5c);
+  --gbth:linear-gradient(135deg,#0d6090,#12967a);
+  --glogo:linear-gradient(135deg,#0d1b2e 0%,#0a4d6e 50%,#1a8f4a 100%);
+  --sf:#fff;--sf2:#f0f4f8;--sf3:#e4eaf2;
+  --brd:rgba(10,122,140,0.15);--brd2:rgba(10,122,140,0.08);
+  --t1:#0d1b2e;--t2:#2a3f5c;--t3:#6b7f99;
+  --shd:0 4px 24px rgba(13,27,46,0.12);--shd2:0 8px 40px rgba(13,27,46,0.16);
+}
 .page{display:none}.page.active{display:block}
-nav{background:#fff;border-bottom:1.5px solid var(--brd);padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 10px var(--shd)}
-.brand{display:flex;align-items:center;gap:10px;cursor:pointer;text-decoration:none}
-.logo-box{width:34px;height:34px;background:var(--gd);border-radius:8px;display:grid;place-items:center;flex-shrink:0}
-.brand-name{font-family:'Lora',serif;font-size:18px;font-weight:700;color:var(--gd)}
-.brand-name em{font-style:normal;font-weight:600;color:#555}
-.btn{padding:8px 18px;border-radius:8px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all .15s}
-.btn-o{background:#fff;color:var(--gd);border:1.5px solid var(--gbr)}.btn-o:hover{background:var(--gl)}
-.btn-g{background:var(--gd);color:#fff}.btn-g:hover{background:var(--gm)}
-.btn-lg{padding:13px 24px;font-size:15px;border-radius:10px}
-.btn-w{width:100%}
-.btn:disabled{opacity:.5;cursor:not-allowed}
-/* Hero */
-.hero{background:linear-gradient(155deg,#0d4a28,#1a6b3c 55%,#1f8f52);padding:56px 20px 48px;text-align:center;color:#fff}
-.hero h1{font-family:'Lora',serif;font-size:36px;font-weight:700;margin-bottom:12px;line-height:1.2}
-.hero h1 span{color:#7dffc0}
-.hero p{font-size:16px;color:rgba(255,255,255,.75);max-width:500px;margin:0 auto 28px;line-height:1.6}
-.hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:32px}
-.hbtn{padding:14px 28px;border-radius:10px;font-family:'Inter',sans-serif;font-size:15px;font-weight:700;cursor:pointer;border:none}
-.hbtn-w{background:#fff;color:var(--gd)}.hbtn-w:hover{transform:translateY(-2px)}
-.hbtn-g{background:rgba(255,255,255,.12);color:#fff;border:1.5px solid rgba(255,255,255,.3)}.hbtn-g:hover{background:rgba(255,255,255,.2)}
-.stats{display:flex;gap:28px;justify-content:center;flex-wrap:wrap;border-top:1px solid rgba(255,255,255,.15);padding-top:24px}
-.snum{font-family:'Lora',serif;font-size:26px;font-weight:700}
-.slbl{font-size:11px;color:rgba(255,255,255,.6);margin-top:2px}
-/* Sections */
-.sec{max-width:900px;margin:0 auto;padding:52px 20px}
-.stag{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--gm);margin-bottom:10px;text-align:center}
-.sec h2{font-family:'Lora',serif;font-size:28px;font-weight:700;color:#0f2d1c;text-align:center;margin-bottom:32px}
-.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
-@media(max-width:600px){.g3{grid-template-columns:repeat(2,1fr)}.g4{grid-template-columns:repeat(2,1fr)}}
-.card{background:#fff;border:1.5px solid var(--brd);border-radius:14px;padding:20px;transition:all .2s;cursor:pointer}
-.card:hover{transform:translateY(-3px);box-shadow:0 8px 24px var(--shd)}
-.card h3{font-size:14px;font-weight:600;color:#0f2d1c;margin-bottom:6px}
-.card p{font-size:12px;color:var(--tmu);line-height:1.5}
-.bg-gl{background:var(--gl);padding:52px 20px}.bg-w{background:#fff;padding:52px 20px}
-/* Pricing */
-.pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:900px;margin:0 auto}
-@media(max-width:600px){.pgrid{grid-template-columns:1fr}}
-.plan{background:#fff;border:2px solid var(--brd);border-radius:18px;padding:26px 20px;display:flex;flex-direction:column;position:relative}
-.plan.feat{border-color:var(--gd);box-shadow:0 0 0 4px rgba(26,107,60,.08)}
-.ftag{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:var(--gd);color:#fff;border-radius:20px;padding:4px 16px;font-size:11px;font-weight:700;white-space:nowrap}
-.pname{font-size:12px;font-weight:700;color:var(--tmu);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
-.pprice{font-family:'Lora',serif;font-size:40px;font-weight:700;color:#0f2d1c;line-height:1;margin-bottom:4px}
-.pprice sup{font-size:18px;vertical-align:top;margin-top:6px;font-family:'Inter',sans-serif}
-.pprice small{font-size:13px;color:var(--tmu);font-family:'Inter',sans-serif;font-weight:400}
-.pdesc{font-size:13px;color:var(--tmu);margin-bottom:18px;line-height:1.5}
-.pfeats{list-style:none;flex:1;margin-bottom:20px}
-.pfeats li{font-size:12px;color:#2d5a3d;padding:4px 0;display:flex;gap:7px}
-.pfeats li::before{content:'✓';color:var(--gb);font-weight:700;flex-shrink:0}
-.pfeats li.no{color:var(--tmu)}.pfeats li.no::before{content:'–';color:var(--tmu)}
-.pbtn{padding:11px;border-radius:10px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer;width:100%;border:none}
-.pbtn-o{background:#fff;color:var(--gd);border:2px solid var(--gbr)}.pbtn-o:hover{background:var(--gl)}
-.pbtn-s{background:var(--gd);color:#fff}.pbtn-s:hover{background:var(--gm)}
-/* CTA + Footer */
-.cta{background:var(--gd);padding:60px 20px;text-align:center;color:#fff}
-.cta h2{font-family:'Lora',serif;font-size:30px;font-weight:700;margin-bottom:10px}
-.cta p{font-size:16px;color:rgba(255,255,255,.75);margin-bottom:24px}
-footer{background:#0f2d1c;padding:22px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
-.fbrand{font-family:'Lora',serif;font-size:15px;font-weight:700;color:#fff}
-.flinks{display:flex;gap:14px}.flinks a{font-size:12px;color:rgba(255,255,255,.5);cursor:pointer;text-decoration:none}
-.fcopy{font-size:11px;color:rgba(255,255,255,.3);width:100%}
-/* Country toggle */
-.ctog{display:flex;background:var(--gd);border-radius:24px;padding:3px;gap:2px}
-.ctog button{padding:6px 16px;border-radius:20px;border:none;cursor:pointer;font-size:13px;font-weight:600;transition:all .15s}
-.ctog button.on{background:#fff;color:var(--gd)}
-.ctog button:not(.on){background:transparent;color:rgba(255,255,255,.75)}
-/* Auth */
+
+/* NAV */
+nav{background:rgba(255,255,255,0.95);border-bottom:1px solid var(--brd2);padding:0 28px;height:64px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;backdrop-filter:blur(12px);box-shadow:0 1px 24px rgba(13,27,46,0.08)}
+.brand{display:flex;align-items:center;gap:12px;cursor:pointer;text-decoration:none}
+.lico{width:38px;height:38px;border-radius:10px;background:var(--glogo);display:grid;place-items:center;flex-shrink:0;box-shadow:0 4px 12px rgba(13,27,46,0.3)}
+.bname{font-size:20px;font-weight:800;color:var(--navy);letter-spacing:-0.5px}
+.bname span{background:var(--gbtn);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+/* BUTTONS */
+.btn{padding:9px 20px;border-radius:9px;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;border:none;transition:all .18s;display:inline-flex;align-items:center;gap:7px}
+.btn-ghost{background:transparent;color:var(--t2);border:1.5px solid var(--brd)}
+.btn-ghost:hover{background:var(--sf2)}
+.btn-g{background:var(--gbtn);color:#fff;box-shadow:0 3px 12px rgba(10,77,110,0.3)}
+.btn-g:hover{background:var(--gbth);transform:translateY(-1px);box-shadow:0 6px 20px rgba(10,77,110,0.4)}
+.btn-g:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.btn-lg{padding:13px 26px;font-size:15px;border-radius:11px}
+.btn-w{width:100%;justify-content:center}
+
+/* HERO */
+.hero{background:var(--grad);padding:72px 24px 64px;text-align:center;color:#fff;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 20% 50%,rgba(77,216,160,0.12) 0%,transparent 60%),radial-gradient(ellipse at 80% 20%,rgba(10,122,140,0.15) 0%,transparent 50%)}
+.hero::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:60px;background:var(--sf2);clip-path:ellipse(55% 100% at 50% 100%)}
+.hi{position:relative;z-index:1;max-width:700px;margin:0 auto}
+.badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:24px;padding:6px 16px;font-size:13px;font-weight:600;color:rgba(255,255,255,0.9);margin-bottom:28px}
+.bdot{width:7px;height:7px;border-radius:50%;background:var(--mint)}
+.hero h1{font-size:48px;font-weight:800;line-height:1.1;margin-bottom:18px;letter-spacing:-1.5px}
+.hero h1 em{font-style:normal;color:var(--mint)}
+.hero p{font-size:18px;color:rgba(255,255,255,0.75);max-width:520px;margin:0 auto 36px;line-height:1.65}
+.hbtns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:48px}
+.hbtn{padding:15px 30px;border-radius:12px;font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;font-weight:700;cursor:pointer;border:none;transition:all .2s}
+.hw{background:#fff;color:var(--navy);box-shadow:0 4px 20px rgba(0,0,0,0.2)}.hw:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,0,0,0.25)}
+.hg{background:rgba(255,255,255,0.1);color:#fff;border:1.5px solid rgba(255,255,255,0.3)}.hg:hover{background:rgba(255,255,255,0.18)}
+.stats{display:flex;gap:32px;justify-content:center;flex-wrap:wrap;border-top:1px solid rgba(255,255,255,0.12);padding-top:36px}
+.sn{font-size:28px;font-weight:800;color:#fff}.sl{font-size:12px;color:rgba(255,255,255,0.6);margin-top:3px;font-weight:500}
+
+/* SECTIONS */
+.sec{max-width:960px;margin:0 auto;padding:72px 20px}
+.stag{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2.5px;background:var(--gbtn);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:12px;text-align:center}
+.sec h2{font-size:32px;font-weight:800;color:var(--navy);text-align:center;margin-bottom:40px;letter-spacing:-0.8px}
+.bgsf{background:var(--sf);padding:72px 20px}
+.bgsf2{background:var(--sf2);padding:72px 20px}
+
+/* CARDS */
+.card{background:var(--sf);border:1px solid var(--brd2);border-radius:16px;padding:24px;transition:all .22s;box-shadow:0 2px 8px rgba(13,27,46,0.06)}
+.card:hover{transform:translateY(-4px);box-shadow:var(--shd2);border-color:var(--brd)}
+.cico{width:44px;height:44px;border-radius:11px;background:var(--glogo);display:grid;place-items:center;margin-bottom:14px;box-shadow:0 3px 10px rgba(13,27,46,0.2)}
+.card h3{font-size:15px;font-weight:700;color:var(--navy);margin-bottom:6px}
+.card p{font-size:13px;color:var(--t3);line-height:1.6}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+@media(max-width:620px){.g3{grid-template-columns:repeat(2,1fr)}.g4{grid-template-columns:repeat(2,1fr)}}
+
+/* PRICING — single plan */
+.price-wrap{max-width:560px;margin:0 auto}
+.price-card{background:var(--sf);border:2px solid transparent;border-radius:24px;padding:40px 36px;position:relative;box-shadow:var(--shd2)}
+.price-card::before{content:'';position:absolute;inset:-2px;border-radius:26px;background:var(--gbtn);z-index:-1}
+.price-inc{list-style:none;margin:24px 0 32px}
+.price-inc li{font-size:14px;color:var(--t2);padding:7px 0;display:flex;gap:10px;align-items:center;font-weight:500;border-bottom:1px solid var(--brd2)}
+.price-inc li:last-child{border-bottom:none}
+.price-inc li::before{content:'✓';background:var(--gbtn);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-weight:800;font-size:15px;flex-shrink:0}
+.price-num{font-size:64px;font-weight:800;color:var(--navy);line-height:1;letter-spacing:-2px}
+.price-num sup{font-size:28px;vertical-align:top;margin-top:12px;letter-spacing:0}
+.price-mo{font-size:14px;color:var(--t3);font-weight:500;margin-top:4px}
+.save-pill{display:inline-block;background:linear-gradient(135deg,rgba(10,77,110,0.1),rgba(26,143,74,0.1));border:1px solid var(--brd);border-radius:20px;padding:5px 14px;font-size:12px;font-weight:700;color:var(--teal);margin-top:8px}
+.ctog{display:flex;background:var(--sf2);border-radius:24px;padding:3px;gap:2px;border:1px solid var(--brd2)}
+.ctog button{padding:7px 20px;border-radius:20px;border:none;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;transition:all .15s;color:var(--t3)}
+.ctog button.on{background:var(--gbtn);color:#fff;box-shadow:0 2px 8px rgba(10,77,110,0.3)}
+.ctog-inv{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15)}
+.ctog-inv button{color:rgba(255,255,255,0.65)}
+.ctog-inv button.on{background:#fff;color:var(--navy)}
+
+/* TESTIMONIALS */
+.tc{background:var(--sf);border:1px solid var(--brd2);border-radius:16px;padding:24px;box-shadow:0 2px 8px rgba(13,27,46,0.06)}
+.tst{background:var(--gbtn);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-size:14px;margin-bottom:10px}
+.tq{font-size:14px;color:var(--t2);line-height:1.7;margin-bottom:16px;font-style:italic}
+.tn{font-size:13px;font-weight:700;color:var(--navy)}
+.tr{font-size:11px;color:var(--t3);margin-top:2px}
+
+/* CTA + FOOTER */
+.cta{background:var(--grad);padding:80px 20px;text-align:center;color:#fff;position:relative;overflow:hidden}
+.cta::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 100%,rgba(77,216,160,0.15) 0%,transparent 60%)}
+.ctai{position:relative;z-index:1}
+.cta h2{font-size:36px;font-weight:800;margin-bottom:14px;letter-spacing:-0.8px}
+.cta p{font-size:17px;color:rgba(255,255,255,0.75);margin-bottom:32px}
+footer{background:var(--navy);padding:28px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.fbr{font-size:16px;font-weight:800;color:#fff}
+.fl{display:flex;gap:18px}.fl a{font-size:12px;color:rgba(255,255,255,0.45);cursor:pointer;text-decoration:none;font-weight:500}.fl a:hover{color:rgba(255,255,255,0.8)}
+.fcp{font-size:11px;color:rgba(255,255,255,0.25);width:100%;font-weight:500}
+
+/* AUTH */
 .awrap{min-height:100vh;display:grid;grid-template-columns:1fr 1fr}
-@media(max-width:640px){.awrap{grid-template-columns:1fr}}
-.aleft{background:var(--gd);padding:48px;display:flex;flex-direction:column;justify-content:center;color:#fff}
-@media(max-width:640px){.aleft{display:none}}
-.aquote{font-family:'Lora',serif;font-size:21px;font-weight:600;line-height:1.45;margin-bottom:22px;color:rgba(255,255,255,.95)}
-.afeats{list-style:none}
-.afeats li{display:flex;align-items:center;gap:10px;font-size:14px;color:rgba(255,255,255,.8);padding:6px 0}
-.afeats li::before{content:'✓';width:20px;height:20px;background:rgba(255,255,255,.15);border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:700;flex-shrink:0}
-.aright{background:#fff;padding:48px;display:flex;flex-direction:column;justify-content:center;overflow-y:auto}
-@media(max-width:640px){.aright{padding:28px 18px}}
-.atitle{font-family:'Lora',serif;font-size:25px;font-weight:700;color:#0f2d1c;margin-bottom:4px}
-.asub{font-size:14px;color:var(--tmu);margin-bottom:22px}
-.back{font-size:13px;color:var(--tmu);cursor:pointer;margin-bottom:18px;display:inline-block}
-.tnotice{background:var(--gl);border:1.5px solid var(--gbr);border-radius:10px;padding:11px 14px;font-size:13px;color:#2d5a3d;margin-bottom:14px}
-.crow{background:var(--gl);border:1.5px solid var(--gbr);border-radius:10px;padding:11px 14px;display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px}
-.clbl{font-size:13px;font-weight:500;color:#2d5a3d}
-.ordiv{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--tmu);margin:8px 0}
-.ordiv::before,.ordiv::after{content:'';flex:1;height:1px;background:var(--brd)}
-.aswitch{text-align:center;font-size:13px;color:var(--tmu);margin-top:14px}
-.aswitch a{color:var(--gd);font-weight:600;cursor:pointer}
-/* Fields */
-.field{display:flex;flex-direction:column;gap:5px;margin-bottom:13px}
-.field label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.9px;color:var(--tmu)}
-.field input,.field select,.field textarea{background:#f9fdfb;border:1.5px solid var(--brd);border-radius:8px;padding:11px 12px;font-family:'Inter',sans-serif;font-size:14px;color:#0f2d1c;outline:none;width:100%;transition:border .15s}
-.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--gb);background:#fff;box-shadow:0 0 0 3px rgba(37,184,110,.1)}
-.field textarea{resize:vertical;min-height:78px;line-height:1.6}
-.field select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%231a6b3c' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:30px}
-.fhint{font-size:11px;color:var(--tmu);margin-top:1px}
-.tc{display:grid;grid-template-columns:1fr 1fr;gap:11px}
-.fc{grid-column:1/-1}
-.ferr{background:#fff5f5;border:1.5px solid #fca5a5;border-radius:8px;padding:10px 12px;color:#c0392b;font-size:13px;margin-top:8px;display:none}
+@media(max-width:700px){.awrap{grid-template-columns:1fr}}
+.aleft{background:var(--grad);padding:52px;display:flex;flex-direction:column;justify-content:center;color:#fff;position:relative;overflow:hidden}
+.aleft::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 80% 20%,rgba(77,216,160,0.15) 0%,transparent 60%)}
+.ali{position:relative;z-index:1}
+@media(max-width:700px){.aleft{display:none}}
+.aln{font-size:20px;font-weight:800;color:#fff}
+.aq{font-size:22px;font-weight:700;line-height:1.45;margin:40px 0 28px;color:rgba(255,255,255,0.95)}
+.af{list-style:none}
+.af li{display:flex;align-items:center;gap:12px;font-size:14px;color:rgba(255,255,255,0.8);padding:8px 0;font-weight:500}
+.af li::before{content:'✓';width:22px;height:22px;background:rgba(255,255,255,0.15);border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:700;flex-shrink:0;color:#fff}
+.aright{background:var(--sf2);padding:52px;display:flex;flex-direction:column;justify-content:center;overflow-y:auto}
+@media(max-width:700px){.aright{padding:28px 18px}}
+.acard{background:#fff;border-radius:20px;padding:36px;box-shadow:var(--shd)}
+.atitle{font-size:26px;font-weight:800;color:var(--navy);margin-bottom:5px;letter-spacing:-0.5px}
+.asub{font-size:14px;color:var(--t3);margin-bottom:24px;font-weight:500}
+.back{font-size:13px;color:var(--t3);cursor:pointer;margin-bottom:20px;display:inline-flex;align-items:center;gap:5px;font-weight:600}
+.back:hover{color:var(--navy)}
+.howbox{background:var(--sf2);border:1px solid var(--brd2);border-radius:14px;padding:18px;margin-bottom:18px}
+.howbox-title{font-size:13px;font-weight:800;color:var(--navy);margin-bottom:12px}
+.howstep{display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--t2);font-weight:500;padding:5px 0}
+.hnum{width:22px;height:22px;border-radius:50%;background:var(--gbtn);color:#fff;font-size:10px;font-weight:800;display:grid;place-items:center;flex-shrink:0}
+.ordiv{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--t3);margin:10px 0;font-weight:600}
+.ordiv::before,.ordiv::after{content:'';flex:1;height:1px;background:var(--brd2)}
+.asw{text-align:center;font-size:13px;color:var(--t3);margin-top:16px;font-weight:500}
+.asw a{color:var(--teal);font-weight:700;cursor:pointer}
+
+/* FIELDS */
+.field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.field label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--t3)}
+.field input,.field select,.field textarea{background:var(--sf2);border:1.5px solid var(--brd2);border-radius:10px;padding:12px 14px;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;color:var(--navy);outline:none;width:100%;transition:all .15s;font-weight:500}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--teal);background:#fff;box-shadow:0 0 0 3px rgba(10,122,140,0.12)}
+.field textarea{resize:vertical;min-height:82px;line-height:1.6}
+.field select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%230a7a8c' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 13px center;padding-right:34px;cursor:pointer}
+.fhint{font-size:11px;color:var(--t3);margin-top:2px;font-weight:500}
+.tw{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fw{grid-column:1/-1}
+.ferr{background:#fef2f2;border:1.5px solid #fca5a5;border-radius:10px;padding:12px 14px;color:#c0392b;font-size:13px;margin-top:8px;display:none;font-weight:500}
 .ferr.on{display:block}
-/* App */
-.main{max-width:780px;margin:0 auto;padding:24px 16px 72px}
-.tgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:24px}
-@media(max-width:480px){.tgrid{grid-template-columns:repeat(2,1fr)}}
-.tc-btn{background:#fff;border:2px solid var(--brd);border-radius:10px;padding:13px;cursor:pointer;text-align:left;font-family:'Inter',sans-serif;transition:all .18s}
-.tc-btn:hover{border-color:var(--gb);background:#f4fbf7}
-.tc-btn.on{border-color:var(--gd);background:var(--gl);box-shadow:0 0 0 3px rgba(26,107,60,.08)}
-.ticon{width:26px;height:26px;background:var(--gd);border-radius:6px;display:grid;place-items:center;margin-bottom:7px}
-.tname{font-size:12px;font-weight:600;color:#0f2d1c;margin-bottom:2px}
-.tdesc{font-size:10px;color:var(--tmu);line-height:1.4}
-.slabel{display:flex;align-items:center;gap:8px;margin-bottom:11px}
-.snum{width:22px;height:22px;border-radius:50%;background:var(--gd);color:#fff;font-size:11px;font-weight:700;display:grid;place-items:center;flex-shrink:0}
-.stitle{font-size:14px;font-weight:600;color:var(--gd)}
-.fcard{background:#fff;border:1.5px solid var(--brd);border-radius:14px;padding:22px;margin-bottom:14px;box-shadow:0 2px 8px var(--shd)}
-.genbtn{width:100%;padding:14px;background:var(--gd);border:none;border-radius:10px;color:#fff;font-family:'Inter',sans-serif;font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:all .2s}
-.genbtn:hover:not(:disabled){background:var(--gm);transform:translateY(-1px)}
-.genbtn:disabled{opacity:.55;cursor:not-allowed;transform:none}
-.spin{width:16px;height:16px;border:2px solid rgba(255,255,255,.3);border-top:2px solid #fff;border-radius:50%;animation:sp .65s linear infinite;display:none}
+
+/* APP */
+.main{max-width:820px;margin:0 auto;padding:28px 18px 80px}
+.tgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:28px}
+@media(max-width:520px){.tgrid{grid-template-columns:repeat(2,1fr)}}
+.tcb{background:var(--sf);border:1.5px solid var(--brd2);border-radius:14px;padding:16px 14px;cursor:pointer;text-align:left;font-family:'Plus Jakarta Sans',sans-serif;transition:all .18s;box-shadow:0 1px 4px rgba(13,27,46,0.06)}
+.tcb:hover{border-color:var(--teal);transform:translateY(-2px);box-shadow:var(--shd)}
+.tcb.on{border-color:transparent;position:relative;box-shadow:0 4px 16px rgba(10,77,110,0.15)}
+.tcb.on::before{content:'';position:absolute;inset:-1.5px;border-radius:15px;background:var(--gbtn);z-index:-1}
+.ticon{width:30px;height:30px;border-radius:8px;background:var(--glogo);display:grid;place-items:center;margin-bottom:9px;box-shadow:0 2px 8px rgba(13,27,46,0.2)}
+.tname{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:3px}
+.tdesc{font-size:11px;color:var(--t3);line-height:1.4;font-weight:500}
+.slbl{display:flex;align-items:center;gap:9px;margin-bottom:13px}
+.snm{width:26px;height:26px;border-radius:50%;background:var(--gbtn);color:#fff;font-size:12px;font-weight:800;display:grid;place-items:center;flex-shrink:0;box-shadow:0 2px 8px rgba(10,77,110,0.3)}
+.stit{font-size:15px;font-weight:700;color:var(--navy)}
+.fcard{background:var(--sf);border:1px solid var(--brd2);border-radius:18px;padding:26px;margin-bottom:16px;box-shadow:0 2px 12px rgba(13,27,46,0.06)}
+.genbtn{width:100%;padding:16px;background:var(--gbtn);border:none;border-radius:13px;color:#fff;font-family:'Plus Jakarta Sans',sans-serif;font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:all .2s;box-shadow:0 4px 18px rgba(10,77,110,0.35)}
+.genbtn:hover:not(:disabled){background:var(--gbth);transform:translateY(-1px);box-shadow:0 7px 24px rgba(10,77,110,0.45)}
+.genbtn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.spin{width:17px;height:17px;border:2px solid rgba(255,255,255,0.3);border-top:2px solid #fff;border-radius:50%;animation:sp .65s linear infinite;display:none}
 @keyframes sp{to{transform:rotate(360deg)}}
-.outwrap{margin-top:26px;display:none}
+
+/* OUTPUT */
+.outwrap{margin-top:28px;display:none}
 .outwrap.on{display:block;animation:rise .35s ease}
-@keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-.outhdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:11px;flex-wrap:wrap;gap:8px}
-.rtag{display:flex;align-items:center;gap:7px;font-size:13px;font-weight:600;color:var(--gd)}
-.rdot{width:8px;height:8px;border-radius:50%;background:var(--gb);box-shadow:0 0 8px var(--gb);animation:pulse 2s infinite}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.outhdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:13px;flex-wrap:wrap;gap:10px}
+.rtag{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--navy)}
+.rdot{width:9px;height:9px;border-radius:50%;background:#22b45a;box-shadow:0 0 10px rgba(26,143,74,0.6);animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-.abtns{display:flex;gap:7px;flex-wrap:wrap}
-.abtn{padding:7px 13px;border-radius:8px;font-family:'Inter',sans-serif;font-size:12px;font-weight:600;cursor:pointer;border:none;transition:all .15s}
-.abtn-c{background:var(--gl);color:var(--gd);border:1.5px solid var(--gbr)}.abtn-c:hover{background:var(--gbr)}
-.abtn-d{background:var(--gd);color:#fff}.abtn-d:hover{background:var(--gm)}
-.abtn-e{background:var(--gd);color:#fff}.abtn-e:hover{background:var(--gm)}
-.abtn-e:disabled{opacity:.45;cursor:not-allowed}
-.lbox{background:#fff;border:1.5px solid var(--gbr);border-radius:14px;overflow:hidden;box-shadow:0 4px 18px var(--shd)}
-.ltop{background:var(--gd);padding:10px 16px;display:flex;align-items:center;gap:7px}
-.wd{width:9px;height:9px;border-radius:50%}
-.w1{background:rgba(255,255,255,.2)}.w2{background:rgba(255,255,255,.35)}.w3{background:rgba(255,255,255,.55)}
-.lfile{margin-left:6px;font-size:11px;color:rgba(255,255,255,.65);font-weight:500}
-.lbody{padding:28px 32px;min-height:100px}
-.ltxt{font-family:'Inter',sans-serif;font-size:14px;line-height:1.9;color:var(--gd);white-space:pre-wrap}
-.disc{margin-top:12px;padding:11px 14px;background:#fffbeb;border:1.5px solid #fde68a;border-radius:10px;font-size:12px;color:#92400e;line-height:1.6}
-.rcheck{margin-top:11px;padding:11px 13px;background:var(--gl);border:1.5px solid var(--gbr);border-radius:10px;display:flex;gap:9px;align-items:flex-start;font-size:13px;color:#0f2d1c;cursor:pointer;transition:background .2s}
-.rcheck.on{background:#f0fdf4;border-color:var(--gb)}
-.rcheck input{width:15px;height:15px;accent-color:var(--gd);margin-top:2px;flex-shrink:0;cursor:pointer}
-/* Panels */
-.panel{background:#fff;border:1.5px solid var(--brd);border-radius:14px;padding:18px;margin-bottom:14px;box-shadow:0 2px 8px var(--shd);display:none}
+.abtns{display:flex;gap:8px;flex-wrap:wrap}
+.abtn{padding:8px 14px;border-radius:9px;font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:700;cursor:pointer;border:none;transition:all .15s}
+.abtn-c{background:var(--sf2);color:var(--navy);border:1px solid var(--brd)}.abtn-c:hover{background:var(--sf3)}
+.abtn-d,.abtn-e{background:var(--gbtn);color:#fff;box-shadow:0 2px 8px rgba(10,77,110,0.25)}.abtn-d:hover,.abtn-e:hover{box-shadow:0 4px 14px rgba(10,77,110,0.4)}
+.abtn-e:disabled{opacity:.4;cursor:not-allowed}
+.lbox{background:var(--sf);border:1px solid var(--brd2);border-radius:18px;overflow:hidden;box-shadow:var(--shd)}
+.ltop{background:var(--grad);padding:12px 20px;display:flex;align-items:center;gap:9px}
+.wd{width:10px;height:10px;border-radius:50%}
+.w1{background:rgba(255,255,255,0.15)}.w2{background:rgba(255,255,255,0.3)}.w3{background:rgba(255,255,255,0.5)}
+.lfile{margin-left:7px;font-size:12px;color:rgba(255,255,255,0.65);font-weight:600}
+.lbody{padding:32px 36px;min-height:120px}
+.ltxt{font-size:14.5px;line-height:1.95;color:var(--navy);white-space:pre-wrap;font-weight:500}
+.disc{margin-top:14px;padding:13px 16px;background:linear-gradient(135deg,rgba(10,77,110,0.05),rgba(26,143,74,0.05));border:1px solid var(--brd);border-radius:12px;font-size:12px;color:var(--t2);line-height:1.6;font-weight:500}
+.rcheck{margin-top:12px;padding:13px 15px;background:var(--sf);border:1.5px solid var(--brd2);border-radius:13px;display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--navy);cursor:pointer;transition:all .2s;font-weight:500}
+.rcheck.on{background:linear-gradient(135deg,rgba(10,77,110,0.06),rgba(26,143,74,0.06));border-color:var(--teal)}
+.rcheck input{width:16px;height:16px;accent-color:var(--teal);margin-top:2px;flex-shrink:0;cursor:pointer}
+
+/* PANELS */
+.panel{background:var(--sf);border:1px solid var(--brd2);border-radius:18px;padding:22px;margin-bottom:16px;box-shadow:0 2px 10px rgba(13,27,46,0.06);display:none}
 .panel.on{display:block}
-.ptitle{font-family:'Lora',serif;font-size:15px;font-weight:700;color:#0f2d1c;margin-bottom:14px}
-.hitem{display:flex;align-items:center;justify-content:space-between;padding:9px 11px;background:#f9fdfb;border-radius:8px;margin-bottom:7px;border:1px solid var(--brd);flex-wrap:wrap;gap:6px}
-.hititle{font-size:13px;font-weight:600;color:#0f2d1c}
-.hisub{font-size:11px;color:var(--tmu)}
-.hempty{font-size:13px;color:var(--tmu);text-align:center;padding:10px}
-/* Modals */
-.moverlay{position:fixed;inset:0;background:rgba(15,45,28,.55);z-index:500;display:none;align-items:center;justify-content:center;padding:14px;backdrop-filter:blur(4px)}
-.moverlay.on{display:flex}
-.modal{background:#fff;border-radius:18px;max-width:440px;width:100%;box-shadow:0 24px 80px rgba(0,0,0,.25);overflow:hidden;max-height:90vh;overflow-y:auto}
-.mhead{background:var(--gd);padding:20px 22px 16px;color:#fff;position:relative}
-.mhead h2{font-family:'Lora',serif;font-size:19px;font-weight:700;margin-bottom:3px}
-.mhead p{font-size:13px;color:rgba(255,255,255,.75)}
-.mcls{position:absolute;top:11px;right:14px;background:transparent;border:none;color:rgba(255,255,255,.7);font-size:22px;cursor:pointer;line-height:1}
-.mbody{padding:18px 20px 22px}
-.minfo{background:var(--gl);border:1px solid var(--gbr);border-radius:8px;padding:10px 12px;font-size:13px;color:#2d5a3d;margin-bottom:14px}
-.pmcards{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:14px}
-@media(max-width:420px){.pmcards{grid-template-columns:1fr}}
-.pmcard{border:2px solid var(--brd);border-radius:11px;padding:13px;cursor:pointer;text-align:center;transition:all .18s}
-.pmcard:hover{border-color:var(--gb);background:#f4fbf7}
-.pmcard.on{border-color:var(--gd);background:var(--gl)}
-.pmname{font-size:11px;font-weight:700;color:var(--tmu);text-transform:uppercase;margin-bottom:3px}
-.pmprice{font-family:'Lora',serif;font-size:24px;font-weight:700;color:#0f2d1c}
-.pmperiod{font-size:10px;color:var(--tmu);margin-top:1px}
-.pill{background:#fffbeb;border:1px solid #fde68a;border-radius:20px;padding:3px 10px;font-size:11px;color:#d97706;font-weight:600}
+.ptit{font-size:15px;font-weight:800;color:var(--navy);margin-bottom:16px}
+.hitem{display:flex;align-items:center;justify-content:space-between;padding:11px 13px;background:var(--sf2);border-radius:10px;margin-bottom:8px;border:1px solid var(--brd2);flex-wrap:wrap;gap:6px}
+.hitn{font-size:13px;font-weight:700;color:var(--navy)}
+.hisu{font-size:11px;color:var(--t3);font-weight:500}
+.hemp{font-size:13px;color:var(--t3);text-align:center;padding:12px;font-weight:500}
+
+/* MODALS */
+.mov{position:fixed;inset:0;background:rgba(13,27,46,0.6);z-index:500;display:none;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(6px)}
+.mov.on{display:flex}
+.modal{background:var(--sf);border-radius:22px;max-width:460px;width:100%;box-shadow:0 32px 80px rgba(13,27,46,0.35);overflow:hidden;max-height:90vh;overflow-y:auto}
+.mhd{background:var(--grad);padding:24px 26px 20px;color:#fff;position:relative}
+.mhd h2{font-size:21px;font-weight:800;margin-bottom:4px}
+.mhd p{font-size:13px;color:rgba(255,255,255,0.75);font-weight:500}
+.mcls{position:absolute;top:14px;right:18px;background:rgba(255,255,255,0.15);border:none;border-radius:50%;color:#fff;font-size:18px;cursor:pointer;width:28px;height:28px;display:grid;place-items:center}.mcls:hover{background:rgba(255,255,255,0.25)}
+.mbdy{padding:22px 24px 26px}
+.minfo{background:linear-gradient(135deg,rgba(10,77,110,0.08),rgba(26,143,74,0.08));border:1px solid var(--brd);border-radius:11px;padding:12px 14px;font-size:13px;color:var(--t2);margin-bottom:16px;font-weight:500}
+.pill{background:linear-gradient(135deg,rgba(10,77,110,0.1),rgba(26,143,74,0.1));border:1px solid var(--brd);border-radius:20px;padding:4px 12px;font-size:11px;color:var(--teal);font-weight:700}
 </style>
 </head>
 <body>
 
-<!-- LANDING -->
+<!-- ══ LANDING ══ -->
 <div id="pg-land" class="page active">
   <nav>
     <a class="brand" onclick="go('pg-land')">
-      <div class="logo-box"><svg width="16" height="16" viewBox="0 0 20 20" fill="none"><rect x="8" y="2" width="4" height="16" rx="2" fill="white"/><rect x="2" y="8" width="16" height="4" rx="2" fill="white"/></svg></div>
-      <span class="brand-name">Med<em>Letter</em></span>
+      <div class="lico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 4L4 20L12 12L20 20L20 4" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <span class="bname">Med<span>Letter</span></span>
     </a>
-    <div style="display:flex;gap:8px;align-items:center">
-      <button class="btn btn-o" onclick="go('pg-login')">Log in</button>
-      <button class="btn btn-g" onclick="go('pg-signup')">Free trial</button>
+    <div style="display:flex;gap:10px;align-items:center">
+      <button class="btn btn-ghost" onclick="go('pg-login')">Log in</button>
+      <button class="btn btn-g" onclick="scrollTo('pricing')">Get access</button>
     </div>
   </nav>
 
   <div class="hero">
-    <div style="display:flex;justify-content:center;margin-bottom:18px">
-      <div class="ctog"><button id="luk" class="on" onclick="lndCtry('UK',this)">UK</button><button id="lus" onclick="lndCtry('US',this)">US</button></div>
-    </div>
-    <h1>Stop writing letters.<br><span>Start treating patients.</span></h1>
-    <p id="hero-p">AI-generated sick notes, referrals, insurance letters and more — professionally formatted in seconds.</p>
-    <div class="hero-btns">
-      <button class="hbtn hbtn-w" onclick="go('pg-signup')">Start 15-day free trial</button>
-      <button class="hbtn hbtn-g" onclick="demoApp()">See it in action</button>
-    </div>
-    <div class="stats">
-      <div><div class="snum">45 min</div><div class="slbl">Saved daily</div></div>
-      <div><div class="snum">&lt;10s</div><div class="slbl">Per letter</div></div>
-      <div><div class="snum">6</div><div class="slbl">Letter types</div></div>
-      <div><div class="snum">15 days</div><div class="slbl">Free trial</div></div>
+    <div class="hi">
+      <div style="display:flex;justify-content:center;margin-bottom:24px">
+        <div class="ctog ctog-inv"><button id="luk" class="on" onclick="lndC('UK',this)">UK</button><button id="lus" onclick="lndC('US',this)">US</button></div>
+      </div>
+      <div class="badge"><div class="bdot"></div><span id="badge-txt">AI-powered letter generation for UK doctors</span></div>
+      <h1>Stop writing letters.<br><em>Start treating patients.</em></h1>
+      <p id="hero-p">AI-generated sick notes, referrals, insurance letters and more — professionally formatted in seconds.</p>
+      <div class="hbtns">
+        <button class="hbtn hw" onclick="scrollTo('pricing')">Get access — $249/yr</button>
+        <button class="hbtn hg" onclick="demoApp()">See it in action</button>
+      </div>
+      <div class="stats">
+        <div><div class="sn">45 min</div><div class="sl">Saved daily</div></div>
+        <div><div class="sn">&lt;10s</div><div class="sl">Per letter</div></div>
+        <div><div class="sn">6</div><div class="sl">Letter types</div></div>
+        <div><div class="sn">$249</div><div class="sl">Per year</div></div>
+      </div>
     </div>
   </div>
 
-  <div style="background:var(--gd);padding:11px 20px;text-align:center;font-size:13px;color:rgba(255,255,255,.8)">
-    UK & US Doctors · GDPR Compliant · HIPAA-Conscious · No patient data stored
+  <div style="background:var(--navy2);padding:13px 24px;text-align:center;font-size:13px;color:rgba(255,255,255,0.65);font-weight:500">
+    UK & US Doctors · $249/yr · GDPR Compliant · HIPAA-Conscious · No patient data stored
   </div>
 
-  <div class="bg-w">
+  <!-- How it works -->
+  <div class="bgsf">
     <div class="sec" style="padding-top:0;padding-bottom:0">
       <div class="stag">How it works</div>
-      <h2>A letter in four simple steps</h2>
+      <h2>Up and running in minutes</h2>
       <div class="g4">
-        <div class="card" style="text-align:center"><div style="width:36px;height:36px;background:var(--gd);border-radius:8px;display:grid;place-items:center;margin:0 auto 10px"><svg width="15" height="15" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/></svg></div><h3>Pick type</h3><p>Choose from 6 professional templates</p></div>
-        <div class="card" style="text-align:center"><div style="width:36px;height:36px;background:var(--gd);border-radius:8px;display:grid;place-items:center;margin:0 auto 10px"><svg width="15" height="15" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div><h3>Enter details</h3><p>Type or dictate clinical notes</p></div>
-        <div class="card" style="text-align:center"><div style="width:36px;height:36px;background:var(--gd);border-radius:8px;display:grid;place-items:center;margin:0 auto 10px"><svg width="15" height="15" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div><h3>AI writes it</h3><p>Professional letter in under 10 seconds</p></div>
-        <div class="card" style="text-align:center"><div style="width:36px;height:36px;background:var(--gd);border-radius:8px;display:grid;place-items:center;margin:0 auto 10px"><svg width="15" height="15" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div><h3>Review & send</h3><p>Copy, download or email instantly</p></div>
+        <div class="card" style="text-align:center">
+          <div class="cico" style="margin:0 auto 14px"><svg width="18" height="18" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg></div>
+          <h3>Purchase access</h3><p>Pay once annually — everything included, no monthly fees</p>
+        </div>
+        <div class="card" style="text-align:center">
+          <div class="cico" style="margin:0 auto 14px"><svg width="18" height="18" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+          <h3>Receive login details</h3><p>We email your account details within a few hours of purchase</p>
+        </div>
+        <div class="card" style="text-align:center">
+          <div class="cico" style="margin:0 auto 14px"><svg width="18" height="18" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div>
+          <h3>Enter details</h3><p>Type or dictate your clinical notes — practice details pre-fill</p>
+        </div>
+        <div class="card" style="text-align:center">
+          <div class="cico" style="margin:0 auto 14px"><svg width="18" height="18" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+          <h3>Letter in seconds</h3><p>Review, copy, download or email to your secretary instantly</p>
+        </div>
       </div>
     </div>
   </div>
 
-  <div class="bg-gl">
+  <!-- What's included -->
+  <div class="bgsf2">
     <div class="sec" style="padding-top:0;padding-bottom:0">
-      <div class="stag">Letter types</div>
-      <h2 id="types-h">6 letter types for UK doctors</h2>
+      <div class="stag">Everything included</div>
+      <h2 id="types-h">6 letter types — all included</h2>
       <div class="g3" id="types-g">
-        <div class="card" onclick="demoApp()"><h3>Sick Note</h3><p>Absence certificate for employer or school</p></div>
-        <div class="card" onclick="demoApp()"><h3>Specialist Referral</h3><p>Refer patient with full clinical context</p></div>
-        <div class="card" onclick="demoApp()"><h3>Fitness to Work</h3><p>Return-to-work or fitness certificate</p></div>
-        <div class="card" onclick="demoApp()"><h3>Insurance Letter</h3><p>Medical report for insurance claim</p></div>
-        <div class="card" onclick="demoApp()"><h3>Medication Letter</h3><p>Patient-friendly medication explanation</p></div>
-        <div class="card" onclick="demoApp()"><h3>Custom Letter</h3><p>Council, legal, housing and more</p></div>
+        <div class="card" onclick="demoApp()" style="cursor:pointer"><h3>Sick Note</h3><p>Absence certificate for employer or school</p></div>
+        <div class="card" onclick="demoApp()" style="cursor:pointer"><h3>Specialist Referral</h3><p>Refer patient with full clinical context</p></div>
+        <div class="card" onclick="demoApp()" style="cursor:pointer"><h3>Fitness to Work</h3><p>Return-to-work or fitness certificate</p></div>
+        <div class="card" onclick="demoApp()" style="cursor:pointer"><h3>Insurance Letter</h3><p>Medical report for insurance claim</p></div>
+        <div class="card" onclick="demoApp()" style="cursor:pointer"><h3>Medication Letter</h3><p>Patient-friendly medication explanation</p></div>
+        <div class="card" onclick="demoApp()" style="cursor:pointer"><h3>Custom Letter</h3><p>Council, legal, housing and more</p></div>
       </div>
     </div>
   </div>
 
-  <div class="bg-w">
+  <!-- Testimonials -->
+  <div class="bgsf">
     <div class="sec" style="padding-top:0;padding-bottom:0">
       <div class="stag">Testimonials</div>
       <h2>Doctors love MedLetter</h2>
       <div class="g3">
-        <div class="card"><div style="color:var(--gb);font-size:13px;margin-bottom:8px">★★★★★</div><p style="font-style:italic;color:#2d5a3d;line-height:1.65;margin-bottom:12px">"40 minutes of letter writing reduced to five. The quality is genuinely impressive."</p><strong style="font-size:12px;color:#0f2d1c">Dr. Sarah J.</strong><div style="font-size:11px;color:var(--tmu)">GP, Manchester</div></div>
-        <div class="card"><div style="color:var(--gb);font-size:13px;margin-bottom:8px">★★★★★</div><p style="font-style:italic;color:#2d5a3d;line-height:1.65;margin-bottom:12px">"Referral letters come out perfectly structured. Consultants have commented on the quality."</p><strong style="font-size:12px;color:#0f2d1c">Dr. Rajiv M.</strong><div style="font-size:11px;color:var(--tmu)">GP Partner, Birmingham</div></div>
-        <div class="card"><div style="color:var(--gb);font-size:13px;margin-bottom:8px">★★★★★</div><p style="font-style:italic;color:#2d5a3d;line-height:1.65;margin-bottom:12px">"Practice details auto-fill every time. An essential part of my daily workflow now."</p><strong style="font-size:12px;color:#0f2d1c">Dr. Fiona O.</strong><div style="font-size:11px;color:var(--tmu)">Locum GP, London</div></div>
+        <div class="tc"><div class="tst">★★★★★</div><div class="tq">"40 minutes of letter writing reduced to five. The quality is genuinely impressive."</div><div class="tn">Dr. Sarah J.</div><div class="tr">GP, Manchester</div></div>
+        <div class="tc"><div class="tst">★★★★★</div><div class="tq">"Referral letters come out perfectly structured. Consultants have commented on the quality."</div><div class="tn">Dr. Rajiv M.</div><div class="tr">GP Partner, Birmingham</div></div>
+        <div class="tc"><div class="tst">★★★★★</div><div class="tq">"Practice details auto-fill every time. An essential part of my daily workflow now."</div><div class="tn">Dr. Fiona O.</div><div class="tr">Locum GP, London</div></div>
       </div>
     </div>
   </div>
 
-  <div class="bg-gl" id="pricing">
-    <div style="max-width:900px;margin:0 auto;padding:0 20px">
+  <!-- PRICING — single plan -->
+  <div class="bgsf2" id="pricing">
+    <div class="sec" style="padding-top:0;padding-bottom:0">
       <div class="stag">Pricing</div>
-      <h2 style="font-family:'Lora',serif;font-size:28px;font-weight:700;color:#0f2d1c;text-align:center;margin-bottom:10px">Simple, honest pricing</h2>
-      <p style="text-align:center;color:var(--tmu);font-size:14px;margin-bottom:18px">15-day free trial · No credit card · Cancel anytime</p>
-      <div style="display:flex;justify-content:center;margin-bottom:20px">
-        <div class="ctog"><button id="puk" class="on" onclick="setPC('UK')">£ UK</button><button id="pus" onclick="setPC('US')">$ US</button></div>
-      </div>
-      <div style="background:#fff;border:1.5px solid var(--gbr);border-radius:14px;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:20px">
-        <div><div style="font-family:'Lora',serif;font-size:16px;font-weight:700;color:#0f2d1c;margin-bottom:2px">15-day free trial — everything included</div><div style="font-size:13px;color:var(--tmu)">Full access to all features. No credit card required.</div></div>
-        <button class="btn btn-g" onclick="go('pg-signup')">Start free trial</button>
-      </div>
-      <div class="pgrid">
-        <div class="plan"><div class="pname">Starter</div><div class="pprice"><sup id="s-c">£</sup><span id="s-p">19</span><small>/mo</small></div><div class="pdesc">For solo GPs and locums.</div><ul class="pfeats"><li>50 letters/month</li><li>All letter types</li><li>Copy & download</li><li>Practice pre-fill</li><li class="no">Letter history</li><li class="no">Multiple profiles</li></ul><button class="pbtn pbtn-o" onclick="go('pg-signup')">Start free trial</button></div>
-        <div class="plan feat"><div class="ftag">Most Popular</div><div class="pname">Pro</div><div class="pprice"><sup id="p-c">£</sup><span id="p-p">39</span><small>/mo</small></div><div class="pdesc">For busy GPs generating letters daily.</div><ul class="pfeats"><li>Unlimited letters</li><li>All letter types</li><li>Copy & download</li><li>Practice pre-fill</li><li>Letter history</li><li>Up to 3 profiles</li></ul><button class="pbtn pbtn-s" onclick="go('pg-signup')">Start free trial</button></div>
-        <div class="plan"><div class="pname">Practice</div><div class="pprice"><sup id="pr-c">£</sup><span id="pr-p">89</span><small>/mo</small></div><div class="pdesc">For group practices and teams.</div><ul class="pfeats"><li>Unlimited letters</li><li>All letter types</li><li>Copy & download</li><li>Practice pre-fill</li><li>Full history</li><li>Unlimited profiles</li></ul><button class="pbtn pbtn-o" onclick="go('pg-signup')">Start free trial</button></div>
+      <h2>One plan. Everything included.</h2>
+      <p style="text-align:center;color:var(--t3);font-size:15px;margin-bottom:32px;font-weight:500">Annual flat rate · No monthly fees · Cancel any time</p>
+
+      <div class="price-wrap">
+        <div class="price-card">
+          <div style="text-align:center;margin-bottom:24px">
+            <div style="font-size:13px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:16px">Full Access — Annual Plan</div>
+            <div class="price-num"><sup>$</sup>249</div>
+            <div class="price-mo">per year · ≈ $21/month</div>
+            <div class="save-pill">Save 25% vs typical monthly rates</div>
+          </div>
+          <ul class="price-inc">
+            <li>Unlimited letter generation — no caps</li>
+            <li>All 6 letter types (sick notes, referrals, insurance & more)</li>
+            <li>Practice details pre-fill on every letter</li>
+            <li>Letter history — access all previous letters</li>
+            <li>Email letters directly to your secretary</li>
+            <li>Tone & language preference</li>
+            <li>Copy & download as text file</li>
+            <li>UK and US letter conventions</li>
+            <li>GDPR & HIPAA-conscious — no patient data stored</li>
+          </ul>
+          <button class="btn btn-g btn-lg btn-w" onclick="buyNow()" style="font-size:16px;padding:16px">Get access — $249/yr</button>
+          <p style="text-align:center;font-size:12px;color:var(--t3);margin-top:12px;font-weight:500">
+            Secure payment via Stripe · You'll receive login details by email within a few hours
+          </p>
+        </div>
       </div>
     </div>
   </div>
 
-  <div class="cta"><h2>Ready to save an hour a day?</h2><p>Free for 15 days. No card needed.</p><button class="hbtn hbtn-w" onclick="go('pg-signup')">Start your free trial</button></div>
+  <div class="cta">
+    <div class="ctai">
+      <h2>Save an hour every day.</h2>
+      <p>One annual payment. Every letter type. Cancel any time.</p>
+      <button class="hbtn hw" onclick="scrollTo('pricing')">Get access — $249/yr</button>
+    </div>
+  </div>
 
   <footer>
-    <span class="fbrand">MedLetter</span>
-    <div class="flinks"><a onclick="go('pg-login')">Log in</a><a onclick="go('pg-signup')">Sign up</a><a>Privacy</a><a>Terms</a></div>
-    <div class="fcopy">© 2026 MedLetter · medletter.app · GDPR Compliant · HIPAA-Conscious</div>
+    <span class="fbr">MedLetter</span>
+    <div class="fl"><a onclick="go('pg-login')">Log in</a><a>Privacy</a><a>Terms</a></div>
+    <div class="fcp">© 2026 MedLetter · medletter.app · Annual plans · GDPR Compliant · HIPAA-Conscious</div>
   </footer>
 </div>
 
-<!-- LOGIN -->
+<!-- ══ LOGIN ══ -->
 <div id="pg-login" class="page">
   <div class="awrap">
-    <div class="aleft">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:36px"><div class="logo-box"><svg width="16" height="16" viewBox="0 0 20 20" fill="none"><rect x="8" y="2" width="4" height="16" rx="2" fill="white"/><rect x="2" y="8" width="16" height="4" rx="2" fill="white"/></svg></div><span style="font-family:'Lora',serif;font-size:19px;font-weight:700;color:#fff">MedLetter</span></div>
-      <div class="aquote">"Finally — a tool that handles the admin so I can focus on patients."</div>
-      <ul class="afeats"><li>All letter types covered</li><li>AI drafts in under 10 seconds</li><li>Practice details pre-fill automatically</li><li>15-day free trial — no card required</li></ul>
-    </div>
+    <div class="aleft"><div class="ali">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div class="lico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 4L4 20L12 12L20 20L20 4" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <span class="aln">MedLetter</span>
+      </div>
+      <div class="aq">"Finally — a tool that handles the admin so I can focus on patients."</div>
+      <ul class="af">
+        <li>All 6 letter types — everything included</li>
+        <li>AI drafts in under 10 seconds</li>
+        <li>Practice details pre-fill on every letter</li>
+        <li>Annual plan · Cancel any time</li>
+      </ul>
+    </div></div>
     <div class="aright">
       <span class="back" onclick="go('pg-land')">← Back to home</span>
-      <div class="atitle">Welcome back</div>
-      <div class="asub">Log in to your MedLetter account</div>
-      <div class="crow"><span class="clbl">Your country</span><div class="ctog"><button id="li-uk" class="on" onclick="setAC('UK','li')">UK</button><button id="li-us" onclick="setAC('US','li')">US</button></div></div>
-      <div class="field"><label>Email address</label><input type="email" id="li-em" placeholder="dr.smith@example.com"></div>
-      <div class="field"><label>Password</label><input type="password" id="li-pw" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
-      <button class="btn btn-g btn-lg btn-w" onclick="doLogin()" style="margin-top:4px">Log in</button>
-      <div class="ordiv">or</div>
-      <button class="btn btn-o btn-lg btn-w" onclick="go('pg-signup')">Create a free account</button>
-      <div class="aswitch">No account? <a onclick="go('pg-signup')">Sign up — 15-day free trial</a></div>
+      <div class="acard">
+        <div class="atitle">Welcome back</div>
+        <div class="asub">Log in with the details we sent you by email</div>
+        <div class="field"><label>Email address</label><input type="email" id="li-em" placeholder="dr.smith@example.com"></div>
+        <div class="field"><label>Password</label><input type="password" id="li-pw" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
+        <div id="li-err" class="ferr"></div>
+        <button class="btn btn-g btn-lg btn-w" onclick="doLogin()" style="margin-top:6px">Log in</button>
+        <div class="ordiv">don't have an account?</div>
+        <button class="btn btn-ghost btn-lg btn-w" onclick="scrollTo('pricing');go('pg-land')">View pricing & get access</button>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- SIGNUP -->
-<div id="pg-signup" class="page">
-  <div class="awrap">
-    <div class="aleft">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:36px"><div class="logo-box"><svg width="16" height="16" viewBox="0 0 20 20" fill="none"><rect x="8" y="2" width="4" height="16" rx="2" fill="white"/><rect x="2" y="8" width="16" height="4" rx="2" fill="white"/></svg></div><span style="font-family:'Lora',serif;font-size:19px;font-weight:700;color:#fff">MedLetter</span></div>
-      <div class="aquote">"I save 45 minutes every day. It has become essential to my practice."</div>
-      <ul class="afeats"><li>Free for 15 days — no credit card needed</li><li>Your details pre-filled on every letter</li><li>Cancel any time, no questions asked</li><li>GDPR compliant — patient data stays private</li></ul>
-    </div>
-    <div class="aright">
-      <span class="back" onclick="go('pg-land')">← Back to home</span>
-      <div class="atitle">Start your free trial</div>
-      <div class="asub">15 days free — no credit card required</div>
-      <div class="crow"><div><div class="clbl">I am a doctor in</div><div style="font-size:11px;color:var(--tmu)">Sets your licence type and currency</div></div><div class="ctog"><button id="su-uk" class="on" onclick="setAC('UK','su')">UK</button><button id="su-us" onclick="setAC('US','su')">US</button></div></div>
-      <div class="tnotice">Full access for 15 days. Choose a plan when your trial ends.</div>
-      <div class="tc"><div class="field"><label>First Name</label><input id="su-fn" placeholder="Sarah"></div><div class="field"><label>Last Name</label><input id="su-ln" placeholder="Johnson"></div></div>
-      <div class="field"><label>Email</label><input type="email" id="su-em" placeholder="dr.johnson@example.com"></div>
-      <div class="field"><label id="su-ll">GMC Number</label><input id="su-li" placeholder="e.g. 7654321"><div class="fhint" id="su-lh">General Medical Council registration number</div></div>
-      <div class="field" id="su-stf" style="display:none"><label>Licence State</label><select id="su-st"><option value="">Select state...</option></select></div>
-      <div class="field"><label>Practice / Hospital</label><input id="su-pr" placeholder="e.g. City Medical Centre"></div>
-      <div class="field"><label>Password</label><input type="password" id="su-pw" placeholder="At least 8 characters"></div>
-      <div id="su-err" class="ferr"></div>
-      <button class="btn btn-g btn-lg btn-w" onclick="doSignup()" style="margin-top:4px">Start 15-day free trial</button>
-      <p style="font-size:11px;color:var(--tmu);text-align:center;margin-top:9px;line-height:1.5">By signing up you agree to our Terms of Service and Privacy Policy.</p>
-      <div class="aswitch">Already have an account? <a onclick="go('pg-login')">Log in</a></div>
-    </div>
-  </div>
-</div>
-
-<!-- APP -->
+<!-- ══ APP ══ -->
 <div id="pg-app" class="page">
   <nav>
     <a class="brand" onclick="go('pg-land')">
-      <div class="logo-box"><svg width="16" height="16" viewBox="0 0 20 20" fill="none"><rect x="8" y="2" width="4" height="16" rx="2" fill="white"/><rect x="2" y="8" width="16" height="4" rx="2" fill="white"/></svg></div>
-      <span class="brand-name">Med<em>Letter</em></span>
+      <div class="lico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 4L4 20L12 12L20 20L20 4" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <span class="bname">Med<span>Letter</span></span>
     </a>
-    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-      <span class="pill" id="trial-pill">15 days left</span>
-      <span id="nav-name" style="font-size:13px;color:#2d5a3d;font-weight:500"></span>
-      <button class="btn btn-o" style="padding:6px 13px;font-size:12px" onclick="go('pg-land')">Log out</button>
+    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+      <span class="pill" id="user-pill">Dr. Smith · Full Access</span>
+      <button class="btn btn-ghost" style="padding:7px 14px;font-size:12px" onclick="doLogout()">Log out</button>
     </div>
   </nav>
 
-  <div class="hero" style="padding:28px 20px 24px">
-    <div id="app-badge" style="margin-bottom:10px"><span style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);border-radius:20px;padding:4px 13px;font-size:12px;font-weight:600">UK Mode</span></div>
-    <h1 style="font-size:26px;margin-bottom:8px">Write letters in <span>seconds</span></h1>
-    <p style="font-size:14px">Fill in the basics and your professional letter is ready to send.</p>
+  <div class="hero" style="padding:32px 24px 48px">
+    <div class="hi">
+      <div id="app-badge" style="margin-bottom:12px">
+        <span class="badge" style="margin:0"><div class="bdot"></div><span id="app-mode">UK Mode</span></span>
+      </div>
+      <h1 style="font-size:30px;margin-bottom:8px">Write letters in <em>seconds</em></h1>
+      <p style="font-size:15px;margin-bottom:0">Fill in the details and your professional letter is ready to send.</p>
+    </div>
   </div>
 
   <div class="main">
-    <div style="display:flex;gap:9px;margin-bottom:18px;flex-wrap:wrap">
-      <button class="btn btn-o" style="font-size:12px;padding:6px 13px" onclick="tog('panel-settings')">My Details</button>
-      <button class="btn btn-o" style="font-size:12px;padding:6px 13px" onclick="tog('panel-hist')">Letter History <span id="hcnt"></span></button>
+    <!-- Toolbar -->
+    <div style="display:flex;gap:9px;margin-bottom:20px;flex-wrap:wrap">
+      <button class="btn btn-ghost" style="font-size:12px;padding:7px 14px" onclick="tog('p-settings')">My Details</button>
+      <button class="btn btn-ghost" style="font-size:12px;padding:7px 14px" onclick="tog('p-hist')">Letter History <span id="hcnt"></span></button>
     </div>
 
-    <div class="panel" id="panel-settings">
-      <div class="ptitle">My Practice Details</div>
-      <div class="tc">
+    <div class="panel" id="p-settings">
+      <div class="ptit">My Practice Details</div>
+      <div class="tw">
         <div class="field"><label>Doctor Name</label><input id="ap-doc" placeholder="Dr. Sarah Johnson"></div>
-        <div class="field"><label>Practice</label><input id="ap-prac" placeholder="City Medical Centre"></div>
+        <div class="field"><label>Practice / Hospital</label><input id="ap-pr" placeholder="City Medical Centre"></div>
       </div>
-      <p style="font-size:11px;color:var(--tmu)">These pre-fill on every letter.</p>
+      <p style="font-size:11px;color:var(--t3);font-weight:500">These pre-fill on every letter automatically.</p>
     </div>
 
-    <div class="panel" id="panel-hist">
-      <div class="ptitle">Recent Letters</div>
-      <div id="hist-list"><div class="hempty">No letters yet.</div></div>
+    <div class="panel" id="p-hist">
+      <div class="ptit">Recent Letters</div>
+      <div id="hist-list"><div class="hemp">No letters yet. Generate your first letter below.</div></div>
     </div>
 
-    <div class="slabel"><div class="snum">1</div><div class="stitle">Select letter type</div></div>
+    <div class="slbl"><div class="snm">1</div><div class="stit">Select letter type</div></div>
     <div class="tgrid" id="type-grid"></div>
 
-    <div class="slabel"><div class="snum">2</div><div class="stitle">Patient & clinical details</div></div>
+    <div class="slbl"><div class="snm">2</div><div class="stit">Patient & clinical details</div></div>
     <div class="fcard">
-      <div class="tc">
+      <div class="tw">
         <div class="field"><label>Patient Full Name</label><input id="f-pat" placeholder="e.g. John Smith"></div>
         <div class="field"><label id="f-dob-l">Date of Birth</label><input id="f-dob" placeholder="e.g. 15/03/1980"></div>
         <div class="field"><label>Your Name</label><input id="f-doc" placeholder="Dr. Sarah Johnson"></div>
-        <div class="field"><label>Practice / Hospital</label><input id="f-prac" placeholder="City Medical Centre"></div>
+        <div class="field"><label>Practice / Hospital</label><input id="f-pr" placeholder="City Medical Centre"></div>
         <div class="field"><label>Addressed To</label><input id="f-rec" placeholder="To Whom It May Concern"></div>
         <div class="field"><label>Letter Date</label><input id="f-date"></div>
-        <div class="field fc"><label>Clinical Notes</label><textarea id="f-notes" placeholder="e.g. Patient has acute lower back pain since 3 April. Unable to perform manual duties. Expected recovery 2–3 weeks."></textarea></div>
-        <div class="field fc" id="f-cust-wrap" style="display:none"><label>Describe What You Need</label><textarea id="f-cust" placeholder="e.g. A letter explaining why my patient requires workplace adjustments..."></textarea></div>
+        <div class="field fw"><label>Clinical Notes</label>
+          <textarea id="f-notes" placeholder="e.g. Patient has acute lower back pain since 3 April. Unable to perform manual duties. Expected recovery 2–3 weeks."></textarea>
+        </div>
+        <div class="field fw" id="f-cw" style="display:none">
+          <label>Describe What You Need</label>
+          <textarea id="f-cust" placeholder="e.g. A letter explaining why my patient requires workplace adjustments..."></textarea>
+        </div>
       </div>
     </div>
 
-    <div class="slabel"><div class="snum">3</div><div class="stitle">Tone & language</div></div>
-    <div class="tc" style="margin-bottom:18px">
-      <div class="field"><label>Tone</label><select id="f-tone"><option value="formal">Formal & Professional</option><option value="concise">Concise & Direct</option><option value="detailed">Detailed & Comprehensive</option><option value="empathetic">Empathetic & Supportive</option></select></div>
-      <div class="field"><label>Language</label><select id="f-lang"><option value="medical">Medical Professional</option><option value="plain">Plain English</option></select></div>
+    <div class="slbl"><div class="snm">3</div><div class="stit">Tone & language</div></div>
+    <div class="tw" style="margin-bottom:20px">
+      <div class="field"><label>Tone</label>
+        <select id="f-tone">
+          <option value="formal">Formal & Professional</option>
+          <option value="concise">Concise & Direct</option>
+          <option value="detailed">Detailed & Comprehensive</option>
+          <option value="empathetic">Empathetic & Supportive</option>
+        </select>
+      </div>
+      <div class="field"><label>Language</label>
+        <select id="f-lang">
+          <option value="medical">Medical Professional</option>
+          <option value="plain">Plain English</option>
+        </select>
+      </div>
     </div>
 
     <button class="genbtn" id="gbtn" onclick="gen()">
@@ -411,16 +489,16 @@ footer{background:#0f2d1c;padding:22px 20px;display:flex;align-items:center;just
       <div class="outhdr">
         <div class="rtag"><div class="rdot"></div>Ready — review before sending</div>
         <div class="abtns">
-          <button class="abtn abtn-c" id="copybtn" onclick="cpyLetter()">Copy</button>
-          <button class="abtn abtn-d" onclick="dlLetter()">Download</button>
-          <button class="abtn abtn-e" id="emb" onclick="openEmailMod()" disabled>Send Email</button>
+          <button class="abtn abtn-c" id="copybtn" onclick="cpyL()">Copy</button>
+          <button class="abtn abtn-d" onclick="dlL()">Download</button>
+          <button class="abtn abtn-e" id="emb" onclick="openM('em-modal')" disabled>Send Email</button>
         </div>
       </div>
       <div class="lbox">
         <div class="ltop"><div class="wd w1"></div><div class="wd w2"></div><div class="wd w3"></div><span class="lfile" id="lfname">Medical Letter</span></div>
         <div class="lbody"><div class="ltxt" id="ltxt"></div></div>
       </div>
-      <div class="rcheck" id="rchk" onclick="toggleRev()">
+      <div class="rcheck" id="rchk" onclick="togRev()">
         <input type="checkbox" id="rcb">
         <div><strong>I have reviewed this letter</strong> and confirm it is clinically accurate and appropriate to send. I remain professionally responsible for all patient correspondence.</div>
       </div>
@@ -428,90 +506,149 @@ footer{background:#0f2d1c;padding:22px 20px;display:flex;align-items:center;just
     </div>
   </div>
 
-  <footer><span class="fbrand">MedLetter</span><div class="flinks"><a onclick="go('pg-land')">Home</a><a>Privacy</a><a>Terms</a></div><div class="fcopy">© 2026 MedLetter · medletter.app</div></footer>
+  <footer><span class="fbr">MedLetter</span><div class="fl"><a onclick="go('pg-land')">Home</a><a>Privacy</a><a>Terms</a></div><div class="fcp">© 2026 MedLetter · medletter.app</div></footer>
 </div>
 
 <!-- EMAIL MODAL -->
-<div class="moverlay" id="em-modal" onclick="if(event.target===this)cModal('em-modal')">
+<div class="mov" id="em-modal" onclick="if(event.target===this)closeM('em-modal')">
   <div class="modal">
-    <div class="mhead"><button class="mcls" onclick="cModal('em-modal')">×</button><h2>Send Letter by Email</h2><p>Send to your secretary or directly to the recipient</p></div>
-    <div class="mbody">
-      <div class="minfo">This opens your email app with the letter pre-filled. Your secretary can then file it or forward it.</div>
+    <div class="mhd"><button class="mcls" onclick="closeM('em-modal')">×</button><h2>Send Letter by Email</h2><p>Send to your secretary or directly to the recipient</p></div>
+    <div class="mbdy">
+      <div class="minfo">This opens your email app with the letter pre-filled. Your secretary can file it or forward it from there.</div>
       <div class="field"><label>Send to (required)</label><input type="email" id="em-to" placeholder="secretary@practice.com"></div>
       <div class="field"><label>CC (optional)</label><input type="email" id="em-cc" placeholder="your own email for records"></div>
       <div class="field"><label>Note (optional)</label><textarea id="em-note" style="min-height:55px" placeholder="e.g. Please attach to patient file."></textarea></div>
-      <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:9px 11px;font-size:12px;color:#92400e;margin-bottom:14px">Always review before sending. The doctor remains responsible for all correspondence.</div>
+      <div style="background:#fef9ec;border:1px solid #fde68a;border-radius:10px;padding:10px 13px;font-size:12px;color:#92400e;margin-bottom:14px;font-weight:500">Always review before sending. The doctor remains responsible for all correspondence.</div>
       <button class="btn btn-g btn-lg btn-w" onclick="sendEmail()">Open in Email App</button>
     </div>
   </div>
 </div>
 
-<!-- PLAN MODAL -->
-<div class="moverlay" id="plan-modal" onclick="if(event.target===this)cModal('plan-modal')">
-  <div class="modal">
-    <div class="mhead"><button class="mcls" onclick="cModal('plan-modal')">×</button><h2>Your trial has ended</h2><p>Pick a plan to keep writing letters in seconds</p></div>
-    <div class="mbody">
-      <div class="minfo">No charge until you confirm. Cancel any time.</div>
-      <div class="pmcards" id="pmc"></div>
-      <button class="btn btn-g btn-lg btn-w" id="pcnf" onclick="cnfPlan()">Continue with Pro</button>
-      <div style="text-align:center;margin-top:9px"><button style="background:transparent;border:none;color:var(--tmu);font-size:13px;cursor:pointer" onclick="cModal('plan-modal')">Remind me tomorrow</button></div>
-    </div>
-  </div>
-</div>
-
 <script>
-const RAILWAY = 'https://nodejs-production-59b5.up.railway.app/generate';
+// ── STRIPE LINK — replace with your real Stripe payment link ──
+const STRIPE_URL = 'https://buy.stripe.com/dRmbJ1aY8gAo4B66r54ko01';
 
-const C = {
-  UK:{lbl:'United Kingdom',ll:'GMC Number',lp:'e.g. 7654321',lh:'General Medical Council registration number',cur:'£',pr:{Starter:19,Pro:39,Practice:89},dl:'en-GB',
+// ── APPROVED USERS — add each customer's email + password here ──
+// Format: { email: 'dr@example.com', password: 'Welcome2026', name: 'Dr. Smith', country: 'UK' }
+const USERS = [
+  { email: 'demo@medletter.app', password: 'Demo2026', name: 'Dr. Demo', country: 'UK' },
+  // Add new customers here after they purchase:
+  // { email: 'customer@nhs.net', password: 'Welcome2026', name: 'Dr. Jones', country: 'UK' },
+];
+
+const CC = {
+  UK:{ lbl:'United Kingdom', cur:'£', price:199, priceStr:'£199/yr', mo:'≈ £17/month', save:'Save 25% vs typical monthly rates', dl:'en-GB',
     lt:[{id:'sick_note',n:'Sick Note',d:'Absence certificate for employer or school'},{id:'referral',n:'Specialist Referral',d:'Refer patient with full clinical context'},{id:'fitness',n:'Fitness to Work',d:'Return-to-work or fitness certificate'},{id:'insurance',n:'Insurance Letter',d:'Medical report for insurance claim'},{id:'medication',n:'Medication Letter',d:'Patient-friendly medication explanation'},{id:'custom',n:'Custom Letter',d:'Council, legal, housing and more'}],
     tn:{sick_note:'Sick Note / Absence Certificate',referral:'Specialist Referral Letter',fitness:'Fitness to Work Certificate',insurance:'Insurance Medical Letter',medication:'Medication Explanation Letter',custom:'Custom Medical Letter'}},
-  US:{lbl:'United States',ll:'NPI Number',lp:'10-digit NPI e.g. 1234567890',lh:'National Provider Identifier from NPPES',cur:'$',pr:{Starter:24,Pro:49,Practice:109},dl:'en-US',
+  US:{ lbl:'United States', cur:'$', price:249, priceStr:'$249/yr', mo:'≈ $21/month', save:'Save 25% vs typical monthly rates', dl:'en-US',
     lt:[{id:'sick_note',n:'Medical Leave Note',d:'Absence documentation for employer or school'},{id:'referral',n:'Specialist Referral',d:'Refer patient with full clinical context'},{id:'prior_auth',n:'Prior Authorization',d:'Insurance pre-authorization request'},{id:'fmla',n:'FMLA Certification',d:'Family & Medical Leave Act documentation'},{id:'medication',n:'Medication Letter',d:'Patient-friendly medication explanation'},{id:'custom',n:'Custom Letter',d:'Disability, legal, school and more'}],
-    tn:{sick_note:'Medical Leave Note',referral:'Specialist Referral Letter',prior_auth:'Prior Authorization Request',fmla:'FMLA Certification Letter',medication:'Medication Explanation Letter',custom:'Custom Medical Letter'}}
+    tn:{sick_note:'Medical Leave Note',referral:'Specialist Referral Letter',prior_auth:'Prior Authorization Request',fmla:'FMLA Certification Letter',medication:'Medication Explanation Letter',custom:'Custom Medical Letter'}},
 };
-const ST = ['AL','AK','AZ','AR','CA','CO','CT','DE','FL','GA','HI','ID','IL','IN','IA','KS','KY','LA','ME','MD','MA','MI','MN','MS','MO','MT','NE','NV','NH','NJ','NM','NY','NC','ND','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT','VT','VA','WA','WV','WI','WY','DC'];
+const ST=['AL','AK','AZ','AR','CA','CO','CT','DE','FL','GA','HI','ID','IL','IN','IA','KS','KY','LA','ME','MD','MA','MI','MN','MS','MO','MT','NE','NV','NH','NJ','NM','NY','NC','ND','OH','OK','OR','PA','RI','SC','SD','TN','TX','UT','VT','VA','WA','WV','WI','WY','DC'];
 
-let ctry='UK', authC='UK', ltType='sick_note', ltxt='', hist=[], selPlan='Pro', rev=false, prC='UK';
+let ctry='UK', ltType='sick_note', ltxt='', hist=[], rev=false, prC='UK', currentUser=null;
 
-function go(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0);if(id==='pg-app'){buildTypeGrid();const d=document.getElementById('f-date');if(!d.value)d.value=new Date().toLocaleDateString(C[ctry].dl,{day:'numeric',month:'long',year:'numeric'});}}
+const RAILWAY='https://nodejs-production-59b5.up.railway.app/generate';
 
-function demoApp(){document.getElementById('nav-name').textContent='Demo Mode';go('pg-app');}
+function go(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0);if(id==='pg-app')initApp();}
+function scrollTo(id){document.getElementById(id).scrollIntoView({behavior:'smooth'});}
+function tog(id){document.getElementById(id).classList.toggle('on');}
+function openM(id){document.getElementById(id).classList.add('on');}
+function closeM(id){document.getElementById(id).classList.remove('on');}
 
-function lndCtry(c,btn){ctry=c;document.querySelectorAll('#luk,#lus').forEach(b=>b.classList.remove('on'));btn.classList.add('on');document.getElementById('hero-p').textContent=c==='UK'?'AI-generated sick notes, referrals, insurance letters and more — professionally formatted in seconds.':'AI-generated prior auths, FMLA letters, referrals and more — professionally formatted in seconds.';document.getElementById('types-h').textContent=c==='UK'?'6 letter types for UK doctors':'6 letter types for US physicians';}
+function lndC(c,btn){ctry=c;document.querySelectorAll('#luk,#lus').forEach(b=>b.classList.remove('on'));btn.classList.add('on');
+  document.getElementById('badge-txt').textContent=c==='UK'?'AI-powered letter generation for UK doctors':'AI-powered letter generation for US physicians';
+  document.getElementById('hero-p').textContent=c==='UK'?'AI-generated sick notes, referrals, insurance letters and more — professionally formatted in seconds.':'AI-generated prior auths, FMLA letters, referrals and more — professionally formatted in seconds.';
+  document.getElementById('types-h').textContent='6 letter types — all included';}
 
-function setAC(c,form){authC=c;['UK','US'].forEach(x=>{const el=document.getElementById(form+'-'+(x==='UK'?'uk':'us'));if(el)el.classList.toggle('on',x===c);});if(form==='su'){const CC=C[c];document.getElementById('su-ll').textContent=CC.ll;document.getElementById('su-li').placeholder=CC.lp;document.getElementById('su-lh').textContent=CC.lh;const sf=document.getElementById('su-stf');sf.style.display=c==='US'?'flex':'none';if(c==='US'&&document.getElementById('su-st').options.length<2){ST.forEach(s=>{const o=document.createElement('option');o.value=o.textContent=s;document.getElementById('su-st').appendChild(o);})}}}
+function setPC(c){prC=c;ctry=c;document.getElementById('puk').classList.toggle('on',c==='UK');document.getElementById('pus').classList.toggle('on',c==='US');updatePriceDisplay();}
 
-function setPC(c){prC=c;document.getElementById('puk').classList.toggle('on',c==='UK');document.getElementById('pus').classList.toggle('on',c==='US');const P=C[c].pr,sym=C[c].cur;[['s',P.Starter],['p',P.Pro],['pr',P.Practice]].forEach(([id,v])=>{document.getElementById(id+'-c').textContent=sym;document.getElementById(id+'-p').textContent=v;});}
 
-function doLogin(){const e=document.getElementById('li-em').value.trim(),p=document.getElementById('li-pw').value.trim();if(!e||!p)return;ctry=authC;document.getElementById('nav-name').textContent='Dr. Johnson';document.getElementById('app-badge').innerHTML='<span style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);border-radius:20px;padding:4px 13px;font-size:12px;font-weight:600">'+C[ctry].lbl+' Mode</span>';go('pg-app');}
 
-function doSignup(){const fn=document.getElementById('su-fn').value.trim(),em=document.getElementById('su-em').value.trim(),pw=document.getElementById('su-pw').value.trim(),err=document.getElementById('su-err');if(!fn||!em||!pw){err.textContent='Please fill in your name, email and password.';err.classList.add('on');return;}err.classList.remove('on');ctry=authC;const ln=document.getElementById('su-ln').value.trim();document.getElementById('nav-name').textContent=`Dr. ${fn} ${ln}`.trim();document.getElementById('app-badge').innerHTML='<span style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);border-radius:20px;padding:4px 13px;font-size:12px;font-weight:600">'+C[ctry].lbl+' Mode</span>';const pr=document.getElementById('su-pr').value.trim();if(pr){document.getElementById('f-prac').value=pr;document.getElementById('ap-prac').value=pr;}document.getElementById('f-doc').value=`Dr. ${fn} ${ln}`.trim();go('pg-app');}
+function buyNow(){window.open(STRIPE_URL,'_blank');}
 
-function buildTypeGrid(){const grid=document.getElementById('type-grid');grid.innerHTML='';C[ctry].lt.forEach(t=>{const b=document.createElement('button');b.className='tc-btn'+(t.id===ltType?' on':'');b.innerHTML=`<div class="ticon"><svg width="13" height="13" viewBox="0 0 20 20" fill="none"><rect x="8" y="2" width="4" height="16" rx="2" fill="white"/><rect x="2" y="8" width="16" height="4" rx="2" fill="white"/></svg></div><div class="tname">${t.n}</div><div class="tdesc">${t.d}</div>`;b.onclick=()=>{document.querySelectorAll('.tc-btn').forEach(x=>x.classList.remove('on'));b.classList.add('on');ltType=t.id;document.getElementById('f-cust-wrap').style.display=t.id==='custom'?'flex':'none';};grid.appendChild(b);});document.getElementById('f-dob-l').textContent=ctry==='UK'?'Date of Birth (DD/MM/YYYY)':'Date of Birth (MM/DD/YYYY)';}
+function demoApp(){
+  currentUser={name:'Dr. Demo',country:'UK'};ctry='UK';
+  document.getElementById('user-pill').textContent='Dr. Demo · Full Access';
+  go('pg-app');
+}
+
+function doLogin(){
+  const em=document.getElementById('li-em').value.trim().toLowerCase();
+  const pw=document.getElementById('li-pw').value.trim();
+  const err=document.getElementById('li-err');
+  const user=USERS.find(u=>u.email.toLowerCase()===em&&u.password===pw);
+  if(!user){err.textContent='Email or password incorrect. Please check and try again, or contact hello@medletter.app';err.classList.add('on');return;}
+  err.classList.remove('on');
+  currentUser=user;ctry=user.country||'UK';
+  document.getElementById('user-pill').textContent=user.name+' · Full Access';
+  go('pg-app');
+}
+
+function doLogout(){currentUser=null;go('pg-land');}
+
+function initApp(){
+  buildTG();
+  const d=document.getElementById('f-date');
+  if(!d.value)d.value=new Date().toLocaleDateString(CC[ctry].dl,{day:'numeric',month:'long',year:'numeric'});
+  document.getElementById('app-mode').textContent=CC[ctry].lbl+' Mode';
+  if(currentUser){
+    document.getElementById('f-doc').value=currentUser.name||'';
+    document.getElementById('ap-doc').value=currentUser.name||'';
+  }
+}
+
+function buildTG(){
+  const grid=document.getElementById('type-grid');
+  grid.innerHTML='';
+  CC[ctry].lt.forEach(t=>{
+    const b=document.createElement('button');
+    b.className='tcb'+(t.id===ltType?' on':'');
+    b.innerHTML=`<div class="ticon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M4 4L4 20L12 12L20 20L20 4" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="tname">${t.n}</div><div class="tdesc">${t.d}</div>`;
+    b.onclick=()=>{document.querySelectorAll('.tcb').forEach(x=>x.classList.remove('on'));b.classList.add('on');ltType=t.id;document.getElementById('f-cw').style.display=t.id==='custom'?'flex':'none';};
+    grid.appendChild(b);
+  });
+  document.getElementById('f-dob-l').textContent=ctry==='UK'?'Date of Birth (DD/MM/YYYY)':'Date of Birth (MM/DD/YYYY)';
+}
 
 const v=id=>(document.getElementById(id)||{}).value||'';
 
-async function gen(){const btn=document.getElementById('gbtn'),sp=document.getElementById('spin'),lbl=document.getElementById('glbl'),err=document.getElementById('gen-err'),wrap=document.getElementById('outwrap');err.classList.remove('on');btn.disabled=true;sp.style.display='block';lbl.textContent='Generating your letter...';ltxt='';rev=false;document.getElementById('rcb').checked=false;document.getElementById('rchk').classList.remove('on');const eb=document.getElementById('emb');eb.disabled=true;eb.style.opacity='.45';eb.style.cursor='not-allowed';
-const CC=C[ctry],tones={formal:'formal and professional',concise:'concise and direct',detailed:'detailed and comprehensive',empathetic:'professional but warm and empathetic'},langs={medical:'Use appropriate medical terminology for a professional audience.',plain:'Use plain simple English. Avoid jargon.'},ctx=ctry==='UK'?'UK medical practice. Follow NHS/UK conventions, British spelling, date format DD Month YYYY.':'US medical practice. Follow US conventions, American spelling, reference FMLA/ADA/insurance where relevant.',tn=CC.tn[ltType]||'Medical Letter';
-const prompt=`You are a senior medical secretary. Draft a complete ${tn} for a ${ctx}\nPatient: ${v('f-pat')||'[Patient Name]'}${v('f-dob')?` (DOB: ${v('f-dob')})`:''}\nAddressed to: ${v('f-rec')||'To Whom It May Concern'}\nDoctor: ${v('f-doc')||'The Treating Physician'}${v('f-prac')?`, ${v('f-prac')}`:''}\nDate: ${v('f-date')}\nClinical details: ${v('f-notes')||'[See clinical notes]'}${ltType==='custom'?`\nRequest: ${v('f-cust')}`:''}\nTone: ${tones[v('f-tone')||'formal']}\n${langs[v('f-lang')||'medical']}\nWrite ONLY the letter. Format: date, salutation, body paragraphs, professional closing, doctor name and credentials. Start with the date.`;
-try{const res=await fetch(RAILWAY,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1024,messages:[{role:'user',content:prompt}]})});const data=await res.json();if(!res.ok)throw new Error(data?.error?.message||`Error ${res.status}`);const txt=(data.content||[]).filter(b=>b.type==='text').map(b=>b.text).join('').trim();if(!txt)throw new Error('No content returned. Please try again.');ltxt=txt;document.getElementById('ltxt').textContent=txt;document.getElementById('lfname').textContent=tn;wrap.classList.add('on');wrap.scrollIntoView({behavior:'smooth',block:'start'});hist.unshift({id:Date.now(),type:tn,patient:v('f-pat')||'Patient',date:v('f-date'),text:txt});if(hist.length>20)hist.pop();renderHist();}catch(e){err.textContent=e.message;err.classList.add('on');}finally{btn.disabled=false;sp.style.display='none';lbl.textContent='Generate Letter';}}
+async function gen(){
+  const btn=document.getElementById('gbtn'),sp=document.getElementById('spin'),lbl=document.getElementById('glbl'),err=document.getElementById('gen-err'),wrap=document.getElementById('outwrap');
+  err.classList.remove('on');btn.disabled=true;sp.style.display='block';lbl.textContent='Generating your letter...';
+  ltxt='';rev=false;document.getElementById('rcb').checked=false;document.getElementById('rchk').classList.remove('on');
+  const eb=document.getElementById('emb');eb.disabled=true;eb.style.opacity='.4';eb.style.cursor='not-allowed';
+  const C=CC[ctry];
+  const tones={formal:'formal and professional',concise:'concise and direct',detailed:'detailed and comprehensive',empathetic:'professional but warm and empathetic'};
+  const langs={medical:'Use appropriate medical terminology for a professional audience.',plain:'Use plain simple English. Avoid jargon.'};
+  const ctx=ctry==='UK'?'UK medical practice. Follow NHS/UK conventions, British spelling, date format DD Month YYYY.':'US medical practice. Follow US conventions, American spelling, reference FMLA/ADA/insurance where relevant.';
+  const tn=C.tn[ltType]||'Medical Letter';
+  const prompt=`You are a senior medical secretary. Draft a complete ${tn} for a ${ctx}\nPatient: ${v('f-pat')||'[Patient Name]'}${v('f-dob')?` (DOB: ${v('f-dob')})`:''}\nAddressed to: ${v('f-rec')||'To Whom It May Concern'}\nDoctor: ${v('f-doc')||'The Treating Physician'}${v('f-pr')?`, ${v('f-pr')}`:''}\nDate: ${v('f-date')}\nClinical details: ${v('f-notes')||'[See clinical notes]'}${ltType==='custom'?`\nRequest: ${v('f-cust')}`:''}\nTone: ${tones[v('f-tone')||'formal']}\n${langs[v('f-lang')||'medical']}\nWrite ONLY the letter. Format: date, salutation, body paragraphs, professional closing, doctor name and credentials. Start with the date.`;
+  try{
+    const res=await fetch(RAILWAY,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:1024,messages:[{role:'user',content:prompt}]})});
+    const data=await res.json();
+    if(!res.ok)throw new Error(data?.error?.message||`Error ${res.status}`);
+    const txt=(data.content||[]).filter(b=>b.type==='text').map(b=>b.text).join('').trim();
+    if(!txt)throw new Error('No content returned. Please try again.');
+    ltxt=txt;
+    document.getElementById('ltxt').textContent=txt;
+    document.getElementById('lfname').textContent=tn;
+    wrap.classList.add('on');
+    wrap.scrollIntoView({behavior:'smooth',block:'start'});
+    hist.unshift({id:Date.now(),type:tn,patient:v('f-pat')||'Patient',date:v('f-date'),text:txt});
+    if(hist.length>50)hist.pop();
+    renderHist();
+  }catch(e){err.textContent=e.message;err.classList.add('on');}
+  finally{btn.disabled=false;sp.style.display='none';lbl.textContent='Generate Letter';}
+}
 
-function toggleRev(){rev=!rev;document.getElementById('rcb').checked=rev;document.getElementById('rchk').classList.toggle('on',rev);const eb=document.getElementById('emb');eb.disabled=!rev;eb.style.opacity=rev?'1':'.45';eb.style.cursor=rev?'pointer':'not-allowed';}
-function cpyLetter(){if(!ltxt)return;navigator.clipboard.writeText(ltxt).then(()=>{const b=document.getElementById('copybtn');b.textContent='Copied!';setTimeout(()=>b.textContent='Copy',2000);});}
-function dlLetter(){if(!ltxt)return;const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([ltxt],{type:'text/plain'}));a.download=`MedLetter-${Date.now()}.txt`;a.click();}
-function openEmailMod(){document.getElementById('em-modal').classList.add('on');}
-function sendEmail(){const to=document.getElementById('em-to').value.trim();if(!to)return;const note=document.getElementById('em-note').value.trim(),cc=document.getElementById('em-cc').value.trim(),sub=encodeURIComponent(`Medical Letter — ${document.getElementById('lfname').textContent}`),body=encodeURIComponent((note?`Note: ${note}\n\n---\n\n`:'')+ltxt);window.open(`mailto:${encodeURIComponent(to)}?subject=${sub}${cc?`&cc=${encodeURIComponent(cc)}`:''}&body=${body}`);cModal('em-modal');}
-function renderHist(){const l=document.getElementById('hist-list'),c=document.getElementById('hcnt');c.textContent=hist.length?`(${hist.length})`:'';if(!hist.length){l.innerHTML='<div class="hempty">No letters yet.</div>';return;}l.innerHTML=hist.map(h=>`<div class="hitem"><div><div class="hititle">${h.type}</div><div class="hisub">${h.patient} · ${h.date}</div></div><button class="btn btn-o" style="padding:4px 11px;font-size:11px" onclick="loadHist(${h.id})">View</button></div>`).join('');}
-function loadHist(id){const item=hist.find(h=>h.id===id);if(!item)return;ltxt=item.text;document.getElementById('ltxt').textContent=item.text;document.getElementById('lfname').textContent=item.type;document.getElementById('outwrap').classList.add('on');tog('panel-hist');document.getElementById('outwrap').scrollIntoView({behavior:'smooth'});}
-function tog(id){document.getElementById(id).classList.toggle('on');}
-function cModal(id){document.getElementById(id).classList.remove('on');}
-function renderPlanCards(){const CC=C[ctry];document.getElementById('pmc').innerHTML=['Starter','Pro','Practice'].map(n=>`<div class="pmcard ${n===selPlan?'on':''}" onclick="selPlanFn('${n}')"><div class="pmname">${n==='Pro'?'★ Pro':n}</div><div class="pmprice">${CC.cur}${CC.pr[n]}</div><div class="pmperiod">per month</div></div>`).join('');}
-function selPlanFn(n){selPlan=n;renderPlanCards();const CC=C[ctry];document.getElementById('pcnf').textContent=`Continue with ${n} — ${CC.cur}${CC.pr[n]}/month`;}
-function cnfPlan(){cModal('plan-modal');alert(`${selPlan} plan selected — in production this redirects to Stripe checkout.`);}
-
-// Init
-document.addEventListener('DOMContentLoaded',()=>{ST.forEach(s=>{const o=document.createElement('option');o.value=o.textContent=s;document.getElementById('su-st').appendChild(o);});renderHist();});
+function togRev(){rev=!rev;document.getElementById('rcb').checked=rev;document.getElementById('rchk').classList.toggle('on',rev);const eb=document.getElementById('emb');eb.disabled=!rev;eb.style.opacity=rev?'1':'.4';eb.style.cursor=rev?'pointer':'not-allowed';}
+function cpyL(){if(!ltxt)return;navigator.clipboard.writeText(ltxt).then(()=>{const b=document.getElementById('copybtn');b.textContent='Copied!';setTimeout(()=>b.textContent='Copy',2000);});}
+function dlL(){if(!ltxt)return;const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([ltxt],{type:'text/plain'}));a.download=`MedLetter-${Date.now()}.txt`;a.click();}
+function sendEmail(){const to=document.getElementById('em-to').value.trim();if(!to)return;const note=document.getElementById('em-note').value.trim(),cc=document.getElementById('em-cc').value.trim(),sub=encodeURIComponent(`Medical Letter — ${document.getElementById('lfname').textContent}`),body=encodeURIComponent((note?`Note: ${note}\n\n---\n\n`:'')+ltxt);window.open(`mailto:${encodeURIComponent(to)}?subject=${sub}${cc?`&cc=${encodeURIComponent(cc)}`:''}&body=${body}`);closeM('em-modal');}
+function renderHist(){const l=document.getElementById('hist-list'),c=document.getElementById('hcnt');c.textContent=hist.length?`(${hist.length})`:'';if(!hist.length){l.innerHTML='<div class="hemp">No letters yet.</div>';return;}l.innerHTML=hist.map(h=>`<div class="hitem"><div><div class="hitn">${h.type}</div><div class="hisu">${h.patient} · ${h.date}</div></div><button class="btn btn-ghost" style="padding:5px 12px;font-size:11px" onclick="loadH(${h.id})">View</button></div>`).join('');}
+function loadH(id){const item=hist.find(h=>h.id===id);if(!item)return;ltxt=item.text;document.getElementById('ltxt').textContent=item.text;document.getElementById('lfname').textContent=item.type;document.getElementById('outwrap').classList.add('on');tog('p-hist');document.getElementById('outwrap').scrollIntoView({behavior:'smooth'});}
+document.addEventListener('DOMContentLoaded',()=>{renderHist();});
 </script>
 </body>
 </html>
