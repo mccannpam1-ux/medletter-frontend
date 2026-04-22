@@ -368,8 +368,8 @@ footer{background:var(--navy);padding:28px 24px;display:flex;align-items:center;
 
   <footer>
     <span class="fbr">MedLetter</span>
-    <div class="fl"><a onclick="go('pg-login')">Log in</a><a>Privacy</a><a>Terms</a></div>
-    <div class="fcp">© 2026 MedLetter · medletter.app · Annual plans · GDPR Compliant · HIPAA-Conscious</div>
+    <div class="fl"><a onclick="go('pg-login')">Log in</a><a href="mailto:hello@medletter.app">hello@medletter.app</a><a>Privacy</a><a>Terms</a></div>
+    <div class="fcp">© 2026 MedLetter · medletter.app · hello@medletter.app · Annual plans · GDPR Compliant</div>
   </footer>
 </div>
 
@@ -526,7 +526,7 @@ footer{background:var(--navy);padding:28px 24px;display:flex;align-items:center;
     </div>
   </div>
 
-  <footer><span class="fbr">MedLetter</span><div class="fl"><a onclick="go('pg-land')">Home</a><a>Privacy</a><a>Terms</a></div><div class="fcp">© 2026 MedLetter · medletter.app</div></footer>
+  <footer><span class="fbr">MedLetter</span><div class="fl"><a onclick="go('pg-land')">Home</a><a href="mailto:hello@medletter.app">hello@medletter.app</a><a>Privacy</a><a>Terms</a></div><div class="fcp">© 2026 MedLetter · medletter.app</div></footer>
 </div>
 
 <!-- EMAIL MODAL -->
@@ -591,7 +591,7 @@ function doLogin(){
   const pw=document.getElementById('li-pw').value.trim();
   const err=document.getElementById('li-err');
   const user=USERS.find(u=>u.email.toLowerCase()===em&&u.password===pw);
-  if(!user){err.textContent='Email or password incorrect. Please check and try again, or contact hello@medletter.app';err.classList.add('on');return;}
+  if(!user){err.textContent='Email or password incorrect. Please check your details or contact hello@medletter.app for help.';err.classList.add('on');return;}
   err.classList.remove('on');
   currentUser=user;ctry=user.country||'UK';
   document.getElementById('user-pill').textContent=user.name+' · Full Access';
